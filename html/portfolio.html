@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Portfolio Home</title>
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&display=swap" rel="stylesheet">
+	<link rel="stylesheet" href="../css/home.css">
+	<link rel="stylesheet" href="../css/about.css">
+	<link rel="stylesheet" href="../css/projects.css">
+	<link rel="stylesheet" href="../css/skills.css">
+	<link rel="stylesheet" href="../css/header.css">
+</head>
+<body>
+	<header class="topbar">
+		<a class="brand" href="#home">narp</a>
+		<nav class="main-nav" aria-label="Primary navigation">
+			<a href="#home">Home</a>
+			<a href="#about">About</a>
+			<a href="#skills">Skills</a>
+			<a href="#project">Project</a>
+			<a href="#contact">Contact</a>
+		</nav>
+	</header>
+
+	<main>
+		<section id="home" class="hero">
+			<div class="hero-layout">
+				<div class="hero-copy">
+					<h1 class="hero-title" aria-label="Hi, I'm FRANZ">
+						<span style="--word-index: 0">Hi,</span>
+						<span style="--word-index: 1">I'm</span>
+						<span style="--word-index: 2">FRANZ</span>
+					</h1>
+					<p>Learning by building and breaking things, then slowly getting better at making them work.</p>
+					<div class="hero-actions">
+						<a href="#contact" class="hero-button">Contact Me</a>
+						<a href="#project" class="hero-button">Projects</a>
+					</div>
+				</div>
+
+				<div class="portrait-wrap">
+					<svg class="circular-text-ring" viewBox="0 0 100 100" aria-hidden="true">
+						<defs>
+							<path id="portrait-circle-path" d="M 50,50 m -44,0 a 44,44 0 1,1 88,0 a 44,44 0 1,1 -88,0"></path>
+						</defs>
+						<text>
+							<textPath href="#portrait-circle-path">COMPUTER SCIENCE • COMPUTER SCIENCE • COMPUTER SCIENCE • </textPath>
+						</text>
+					</svg>
+
+					<div class="portrait-ring">
+						<img src="../images/Face.png" alt="Portrait photo">
+					</div>
+				</div>
+			</div>
+		</section>
+
+		<section id="about" class="about-section">
+			<h2>WHO AM I?</h2>
+			<p>Hello, I am Franz Embuscado, a Computer Science student focused on building and improving projects through hands-on work. I build things that I am curious about, learning by exploring ideas, solving problems, and refining each project over time to better understand how things work.</p>
+		</section>
+
+		<section id="skills" class="skills-section">
+			<h2>SKILLS</h2>
+
+			<div class="skills-grid">
+				<article class="skill-card">
+					<h3>Programming Language</h3>
+					<div class="skill-items">
+						<div class="skill-item">
+							<img src="../images/Python.PNG" alt="Python logo">
+							<p>Python</p>
+						</div>
+						<div class="skill-item">
+							<img src="../images/Java.PNG" alt="Java logo">
+							<p>Java</p>
+						</div>
+						<div class="skill-item">
+							<img src="../images/PHP.PNG" alt="PHP logo">
+							<p>PHP</p>
+						</div>
+					</div>
+				</article>
+
+				<article class="skill-card">
+					<h3>Frontend Development</h3>
+					<div class="skill-items">
+						<div class="skill-item">
+							<img src="../images/CSS.PNG" alt="CSS logo">
+							<p>CSS</p>
+						</div>
+						<div class="skill-item">
+							<img src="../images/HTML.PNG" alt="HTML logo">
+							<p>HTML</p>
+						</div>
+						<div class="skill-item">
+							<img src="../images/JavaScript.PNG" alt="JavaScript logo">
+							<p>JavaScript</p>
+						</div>
+					</div>
+				</article>
+
+				<article class="skill-card skill-card-centered">
+					<h3>UI/UX Design</h3>
+					<div class="skill-items skill-items-single">
+						<div class="skill-item">
+							<img src="../images/Figma.PNG" alt="Figma logo">
+							<p>Figma</p>
+						</div>
+					</div>
+				</article>
+			</div>
+		</section>
+
+		<section id="project" class="projects-section">
+			<h2 class="projects-heading">Projects</h2>
+
+			<div class="project-list">
+				<article class="project-item">
+					<div class="project-index">01</div>
+					<div class="project-body">
+						<h3 class="project-title"><a class="project-title-wip" href="#project" aria-label="The Generics Pharmacy project is still in WIP">The Generics Pharmacy | Inventory System <span class="project-wip-badge" aria-hidden="true">🚧 WIP</span></a></h3>
+						<div class="project-meta">3rd Year | Software Engineering Project | Full System</div>
+						<p class="project-description">First full system project that was done individually, created an inventory system for a pharmacy with FIFO logic and an expiration tracker.</p>
+					</div>
+					<a class="project-visual project-visual-wip" data-label="TGP" href="#project" aria-label="The Generics Pharmacy project is still in WIP" title="🚧 Still in WIP">
+						<img src="../images/TGP BG.jpg" alt="The Generics Pharmacy inventory system background">
+					</a>
+				</article>
+
+				<article class="project-item">
+					<div class="project-index">02</div>
+					<div class="project-body">
+						<h3 class="project-title"><a href="https://www.figma.com/design/U30K7yprZhAYC6Hqz7sAgn/Minecraft-Companion-App?node-id=0-1&t=Ng86AnRhE3e2FuUH-1" target="_blank" rel="noopener noreferrer" aria-label="Open Minecraft Companion App design in Figma">Minecraft Companion App | UI/UX Competition</a></h3>
+						<div class="project-meta">2nd Year | IT Week UI/UX Competition | Design</div>
+						<p class="project-description">First Figma solo project and first time using Figma to design an app.</p>
+					</div>
+					<a class="project-visual" data-label="COMPANION APP" href="https://www.figma.com/design/U30K7yprZhAYC6Hqz7sAgn/Minecraft-Companion-App?node-id=0-1&t=Ng86AnRhE3e2FuUH-1" target="_blank" rel="noopener noreferrer" aria-label="Open Minecraft Companion App design in Figma">
+						<img src="../images/MC BG.png" alt="Minecraft companion app background">
+					</a>
+				</article>
+
+				<article class="project-item">
+					<div class="project-index">03</div>
+					<div class="project-body">
+						<h3 class="project-title"><a href="https://www.figma.com/design/DAC2pZ0ToD93SvoLGHgIDc/Mock-Up-Website-Design-DPWH?node-id=0-1&t=Q4546rASB3RKFu9V-1" target="_blank" rel="noopener noreferrer" aria-label="Open DPWH redesign in Figma">DPWH Website Redesign | Website Redesign</a></h3>
+						<div class="project-meta">2nd Year | Event Driven Programming Project | Website Redesign</div>
+						<p class="project-description">Redesigning of a Government Website to have a more modern look and easier navigation.</p>
+					</div>
+					<a class="project-visual" data-label="REDESIGN" href="https://www.figma.com/design/DAC2pZ0ToD93SvoLGHgIDc/Mock-Up-Website-Design-DPWH?node-id=0-1&t=Q4546rASB3RKFu9V-1" target="_blank" rel="noopener noreferrer" aria-label="Open DPWH redesign in Figma">
+						<img src="../images/DPWH BG.jpg" alt="DPWH website redesign background">
+					</a>
+				</article>
+
+				<article class="project-item">
+					<div class="project-index">04</div>
+					<div class="project-body">
+						<h3 class="project-title"><a class="project-title-wip" href="#project" aria-label="Hobby Tracker project is still in WIP">Hobby Tracker | Tracker <span class="project-wip-badge" aria-hidden="true">🚧 WIP</span></a></h3>
+						<div class="project-meta">WIP 🚧</div>
+						<p class="project-description">WIP 🚧</p>
+					</div>
+					<a class="project-visual project-visual-wip" data-label="TRACKER" href="#project" aria-label="Hobby Tracker project is still in WIP" title="🚧 Still in WIP">
+						<img src="../images/WIP.jpg" alt="DPWH website redesign background">
+					</a>
+				</article>
+
+			</div>
+		</section>
+	</main>
+	<script src="../js/nav-active.js"></script>
+</body>
+</html>

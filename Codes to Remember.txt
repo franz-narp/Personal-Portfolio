@@ -1,0 +1,33 @@
+WIP CSS
+.project-wip-badge {
+    display: inline-flex;
+    align-items: center;
+    margin-left: 10px;
+    padding: 2px 8px;
+    border-radius: 999px;
+    font-size: 0.42em;
+    letter-spacing: 0.4px;
+    background: rgba(255, 180, 56, 0.2);
+    color: rgba(255, 230, 178, 0.95);
+    border: 1px solid rgba(255, 180, 56, 0.45);
+    vertical-align: middle;
+}
+
+.project-visual-wip::before {
+    content: "🚧 WIP";
+    position: absolute;
+    top: 12px;
+    left: 12px;
+    z-index: 2;
+    padding: 4px 10px;
+    border-radius: 999px;
+    font-size: clamp(11px, 0.8vw, 14px);
+    letter-spacing: 0.3px;
+    background: rgba(255, 180, 56, 0.24);
+    color: rgba(255, 238, 198, 0.97);
+    border: 1px solid rgba(255, 180, 56, 0.5);
+}
+
+Sample code for when a WIP is being done
+
+<h3 class="project-title"><a class="project-title-wip" href="#project" aria-label="The Generics Pharmacy project is still in WIP">The Generics Pharmacy | Inventory System <span class="project-wip-badge" aria-hidden="true">🚧 WIP</span></a></h3>
