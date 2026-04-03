@@ -1,0 +1,61 @@
+<style>
+.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
+.modal-grid label { display: flex; flex-direction: column; font-weight: 500; }
+.modal-grid label.full-width { grid-column: 1 / -1; }
+.modal-grid input, .modal-grid select, .modal-grid textarea { margin-top: 5px; padding: 8px; border: 1px solid #ddd; border-radius: 4px; }
+.modal-actions { display: flex; gap: 10px; justify-content: flex-end; padding: 0 20px 20px; }
+</style>
+
+<form method="post" id="medicine-create-form" action="#">
+    
+    <h3 style="margin-top:0; padding: 20px 20px 10px;">Add New Medicine</h3>
+    <div class="modal-grid">
+        <label>Name </label>
+        <label>Brand </label>
+        <label>Category </label>
+        <label>Product Type </label>
+        <label>Dosage Form </label>
+        <label>Strength </label>
+        <label>Pieces / Pack </label>
+        <label>Packs / Box </label>
+        <label>Base Price (₱) </label>
+        <label>Selling Price (₱) </label>
+        <label class="full-width">Description </label>
+    </div>
+    <div class="modal-actions">
+        <button type="submit" class="btn-edit" style="background:#4CAF50;color:#fff;border:none;padding:10px 20px;border-radius:4px;cursor:pointer;">Add Medicine</button>
+        <button type="button" class="block-btn" style="padding:10px 20px;border-radius:4px;cursor:pointer;" onclick="closeModal()">Cancel</button>
+    </div>
+</form>
+
+<script>
+// Dynamic product type loading based on category selection
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryField = document.querySelector('#medicine-create-form select[name="category"]');
+    const productTypeField = document.querySelector('#medicine-create-form select[name="product_type"]');
+    
+    if (categoryField && productTypeField) {
+        categoryField.addEventListener('change', function() {
+            const categoryId = this.value;
+            
+            // Clear current product type options
+            productTypeField.innerHTML = '<option value="">---------</option>';
+            
+            if (categoryId) {
+                // Fetch product types for selected category
+                fetch(`/api/product-types/?category=${categoryId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(productType => {
+                            const option = document.createElement('option');
+                            option.value = productType.id;
+                            option.textContent = productType.name;
+                            productTypeField.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error loading product types:', error));
+            }
+        });
+    }
+});
+</script>

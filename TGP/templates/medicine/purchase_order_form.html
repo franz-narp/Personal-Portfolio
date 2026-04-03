@@ -1,0 +1,216 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../TGPfavicon.png">
+    <meta charset="UTF-8">
+    <title>TGP Pharmacy</title>
+        <link rel="stylesheet" href="../../static/registration/sidebarstyles.css">
+    <link rel="stylesheet" href="../../static/registration/userliststyles.css">
+    <style>
+        .items-table { width: 100%; border-collapse: collapse; margin: 20px 0; }
+        .items-table th, .items-table td { padding: 10px; border: 1px solid #ddd; text-align: left; }
+        .items-table th { background: #f44336; color: white; font-weight: 600; }
+        .btn-remove { background: #f44336; color: white; border: none; padding: 5px 10px; border-radius: 4px; cursor: pointer; }
+        .form-actions { margin-top: 20px; display: flex; gap: 10px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="sidebar" id="sidebar">
+    <div class="logo-container">
+        <img src="../../static/landingpage/photo/logo.png" alt="TGP Logo">
+    </div>
+    <ul class="menu">
+        <li><a href="../dashboard/dashboard_demo.html">Dashboard</a></li>
+        <li><a href="../registration/userlist.html">User Accounts</a></li>
+        <li><a href="../medicine/medicine_list.html">Product</a></li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-po')">Purchase Orders</a>
+            <ul id="dropdown-po" class="dropdown-menu">
+                <li><a href="../medicine/purchase_order_form.html">New Order</a></li>
+                <li><a href="../medicine/purchase_order_list.html">View Orders</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-stock')">Stock Analysis</a>
+            <ul id="dropdown-stock" class="dropdown-menu">
+                <li><a href="../transfer/transfer_form.html">Stock Transfer</a></li>
+                <li><a href="../medicine/batch_list.html">Stock Batches</a></li>
+                <li><a href="../medicine/actual_inventory.html">Inventory</a></li>
+                <li><a href="../medicine/expiration_monitor.html">Expiration</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-logs')">Logs</a>
+            <ul id="dropdown-logs" class="dropdown-menu">
+                <li><a href="../dashboard/activity_logs.html">Activity Logs</a></li>
+                <li><a href="../medicine/movement_list.html">Stock Movement</a></li>
+                <li><a href="../notifications/notification_list.html">Notifications</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-sales')">Sales</a>
+            <ul id="dropdown-sales" class="dropdown-menu">
+                <li><a href="../medicine/dispense_form.html">Dispense</a></li>
+                <li><a href="../sales/sales_report.html">Sales Report</a></li>
+                <li><a href="../medicine/price_history.html">Price History</a></li>
+                <li><a href="../sales/refund_list.html">Refunds</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-account')">Account</a>
+            <ul id="dropdown-account" class="dropdown-menu">
+                <li><a href="../registration/updateaccount.html">Update Account</a></li>
+                <li><a href="../registration/updatepassword.html">Update Password</a></li>
+            </ul>
+        </li>
+
+        <li><a href="../ordering/ordering_list.html">Orders</a></li>
+        <li><a href="../landingpage/landingpage.html">Logout</a></li>
+    </ul>
+</div>
+<script>
+function toggleDropdown(id) {
+    const dropdown = document.getElementById(id);
+    if (!dropdown) return;
+    const dropdownLi = dropdown.parentElement;
+    dropdown.classList.toggle('open');
+    dropdown.classList.toggle('show');
+    dropdownLi.classList.toggle('open');
+}
+
+(function initSidebarState() {
+    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+    const links = document.querySelectorAll('.sidebar .menu a[href]');
+
+    links.forEach(function (link) {
+        const href = (link.getAttribute('href') || '').trim();
+        if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+        const targetPage = href.split('/').pop().toLowerCase();
+        if (targetPage && targetPage === currentPage) {
+            const li = link.closest('li');
+            if (li) li.classList.add('active');
+
+            const menu = link.closest('.dropdown-menu');
+            if (menu) {
+                menu.classList.add('open');
+                menu.classList.add('show');
+                const parent = menu.closest('.dropdown');
+                if (parent) parent.classList.add('open');
+            }
+        }
+    });
+})();
+</script>
+
+    <div class="main-content">
+        <h2>Create Purchase Order</h2>
+        <p style="color: #666; margin-bottom: 20px;">Add all medicines you want to order in this single purchase order. Click "+ Add Another Medicine" to add more items.</p>
+
+        <form method="post" id="po-form">
+            
+            
+            <table class="items-table" id="items-table">
+                <thead>
+                    <tr>
+                        <th style="width: 40%;">Medicine</th>
+                        <th style="width: 15%;">Quantity (Boxes)</th>
+                        <th style="width: 20%;">Manufactured Date</th>
+                        <th style="width: 20%;">Expiration Date</th>
+                        <th style="width: 5%;"></th>
+                    </tr>
+                </thead>
+                <tbody id="items-body">
+                    <tr class="item-row">
+                        <td>
+                            <select name="medicine[]" required style="width: 100%; padding: 8px;">
+                                <option value="">-- Select Medicine --</option>
+                                
+                                <option value=""></option>
+                                
+                            </select>
+                        </td>
+                        <td><input type="number" name="quantity[]" required min="1" value="1" style="width: 100%; padding: 8px;"></td>
+                        <td><input type="date" name="manufactured_date[]" required style="width: 100%; padding: 8px;"></td>
+                        <td><input type="date" name="expiration_date[]" required style="width: 100%; padding: 8px;"></td>
+                        <td><button type="button" class="btn-remove" onclick="removeRow(this)" style="display: none;">×</button></td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <button type="button" onclick="addRow()" style="padding: 10px 20px; background: #2196F3; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">+ Add Another Medicine</button>
+            
+            <div style="margin-top: 20px;">
+                <label style="display: block; font-weight: 500; margin-bottom: 5px;">Notes (Optional)</label>
+                <textarea name="notes" rows="3" style="width: 100%; padding: 8px; border: 1px solid #ddd; border-radius: 4px;"></textarea>
+            </div>
+            
+            <div class="form-actions">
+                <button type="submit" style="padding: 10px 30px; background: #4CAF50; color: white; border: none; border-radius: 4px; cursor: pointer; font-weight: 500;">Create Order</button>
+                <a href="#" style="padding: 10px 30px; background: #666; color: white; border: none; border-radius: 4px; cursor: pointer; text-decoration: none; display: inline-block;">Cancel</a>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+function addRow() {
+    const tbody = document.getElementById('items-body');
+    const newRow = tbody.rows[0].cloneNode(true);
+    
+    // Clear values
+    newRow.querySelector('input[type="number"]').value = '1';
+    newRow.querySelector('select').selectedIndex = 0;
+    newRow.querySelectorAll('input[type="date"]').forEach(input => input.value = '');
+    
+    // Show remove button
+    newRow.querySelector('.btn-remove').style.display = 'inline-block';
+    
+    tbody.appendChild(newRow);
+    updateRemoveButtons();
+}
+
+function removeRow(btn) {
+    btn.closest('tr').remove();
+    updateRemoveButtons();
+}
+
+function updateRemoveButtons() {
+    const rows = document.querySelectorAll('.item-row');
+    rows.forEach((row, index) => {
+        const removeBtn = row.querySelector('.btn-remove');
+        removeBtn.style.display = rows.length > 1 ? 'inline-block' : 'none';
+    });
+}
+</script>
+<script>
+(function () {
+  if (window.__tgpDemoMode) return;
+  window.__tgpDemoMode = true;
+
+  document.querySelectorAll('form').forEach(function (form) {
+    var action = (form.getAttribute('action') || '').trim();
+    if (!action || action === '#' || action.toLowerCase().startsWith('javascript:')) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        alert('Demo mode: form submission is disabled.');
+      });
+    }
+  });
+
+  document.querySelectorAll('a[href="#"]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      alert('Demo mode: this action is not connected to backend logic.');
+    });
+  });
+})();
+</script>
+</body>
+</html>

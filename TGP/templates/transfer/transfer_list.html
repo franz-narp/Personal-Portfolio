@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../TGPfavicon.png">
+    <meta charset="UTF-8">
+    <title>TGP Pharmacy</title>
+        <link rel="stylesheet" href="../../static/registration/sidebarstyles.css">
+    <link rel="stylesheet" href="../../static/registration/userliststyles.css">
+    <style>
+        .filter-section {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        .filter-form {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .filter-group label {
+            font-weight: 500;
+            font-size: 14px;
+            color: #555;
+        }
+        .filter-group select,
+        .filter-group input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            min-width: 150px;
+        }
+        .btn-filter {
+            padding: 8px 20px;
+            border: none;
+            background: #e53935;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-filter:hover {
+            background: #c62828;
+        }
+        .btn-clear {
+            padding: 8px 20px;
+            border: none;
+            background: #999;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-clear:hover {
+            background: #777;
+        }
+        .unit-badge {
+            padding: 4px 8px;
+            border-radius: 3px;
+            font-size: 12px;
+            font-weight: bold;
+            background: #2196F3;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="sidebar" id="sidebar">
+    <div class="logo-container">
+        <img src="../../static/landingpage/photo/logo.png" alt="TGP Logo">
+    </div>
+    <ul class="menu">
+        <li><a href="../dashboard/dashboard_demo.html">Dashboard</a></li>
+        <li><a href="../registration/userlist.html">User Accounts</a></li>
+        <li><a href="../medicine/medicine_list.html">Product</a></li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-po')">Purchase Orders</a>
+            <ul id="dropdown-po" class="dropdown-menu">
+                <li><a href="../medicine/purchase_order_form.html">New Order</a></li>
+                <li><a href="../medicine/purchase_order_list.html">View Orders</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-stock')">Stock Analysis</a>
+            <ul id="dropdown-stock" class="dropdown-menu">
+                <li><a href="../transfer/transfer_form.html">Stock Transfer</a></li>
+                <li><a href="../medicine/batch_list.html">Stock Batches</a></li>
+                <li><a href="../medicine/actual_inventory.html">Inventory</a></li>
+                <li><a href="../medicine/expiration_monitor.html">Expiration</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-logs')">Logs</a>
+            <ul id="dropdown-logs" class="dropdown-menu">
+                <li><a href="../dashboard/activity_logs.html">Activity Logs</a></li>
+                <li><a href="../medicine/movement_list.html">Stock Movement</a></li>
+                <li><a href="../notifications/notification_list.html">Notifications</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-sales')">Sales</a>
+            <ul id="dropdown-sales" class="dropdown-menu">
+                <li><a href="../medicine/dispense_form.html">Dispense</a></li>
+                <li><a href="../sales/sales_report.html">Sales Report</a></li>
+                <li><a href="../medicine/price_history.html">Price History</a></li>
+                <li><a href="../sales/refund_list.html">Refunds</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-account')">Account</a>
+            <ul id="dropdown-account" class="dropdown-menu">
+                <li><a href="../registration/updateaccount.html">Update Account</a></li>
+                <li><a href="../registration/updatepassword.html">Update Password</a></li>
+            </ul>
+        </li>
+
+        <li><a href="../ordering/ordering_list.html">Orders</a></li>
+        <li><a href="../landingpage/landingpage.html">Logout</a></li>
+    </ul>
+</div>
+<script>
+function toggleDropdown(id) {
+    const dropdown = document.getElementById(id);
+    if (!dropdown) return;
+    const dropdownLi = dropdown.parentElement;
+    dropdown.classList.toggle('open');
+    dropdown.classList.toggle('show');
+    dropdownLi.classList.toggle('open');
+}
+
+(function initSidebarState() {
+    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+    const links = document.querySelectorAll('.sidebar .menu a[href]');
+
+    links.forEach(function (link) {
+        const href = (link.getAttribute('href') || '').trim();
+        if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+        const targetPage = href.split('/').pop().toLowerCase();
+        if (targetPage && targetPage === currentPage) {
+            const li = link.closest('li');
+            if (li) li.classList.add('active');
+
+            const menu = link.closest('.dropdown-menu');
+            if (menu) {
+                menu.classList.add('open');
+                menu.classList.add('show');
+                const parent = menu.closest('.dropdown');
+                if (parent) parent.classList.add('open');
+            }
+        }
+    });
+})();
+</script>
+
+    <div class="main-content">
+        <h2>Stock Transfer (Stock-Out)</h2>
+
+        
+            <div style="margin-bottom: 20px;">
+                
+                    <div style="padding: 10px; margin-bottom: 10px; border-radius: 4px; 
+                                background: #d4edda; color: #155724;
+                                background: #f8d7da; color: #721c24;
+                                background: #d1ecf1; color: #0c5460;">
+                        
+                    </div>
+                
+            </div>
+        
+
+        <div class="search-form">
+            <form method="post" style="flex: 1;">
+                
+                
+                <div class="table-container">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Medicine</th>
+                                <th style="width: 15%;">Quantity</th>
+                                <th style="width: 15%;">Unit Type</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            
+                            <tr>
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+                <div style="margin-top: 15px; display: flex; gap: 10px;">
+                    <button type="submit" class="btn-create">Transfer Selected Items</button>
+                    <a href="#" class="btn-clear">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("collapsed");
+    }
+
+    function toggleDropdown(id) {
+        const dropdown = document.getElementById(id);
+        const dropdownLi = dropdown.parentElement;
+        
+        // Toggle the 'open' class on both the dropdown menu and the parent li
+        dropdown.classList.toggle('open');
+        dropdownLi.classList.toggle('open');
+    }
+</script>
+<script>
+(function () {
+  if (window.__tgpDemoMode) return;
+  window.__tgpDemoMode = true;
+
+  document.querySelectorAll('form').forEach(function (form) {
+    var action = (form.getAttribute('action') || '').trim();
+    if (!action || action === '#' || action.toLowerCase().startsWith('javascript:')) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        alert('Demo mode: form submission is disabled.');
+      });
+    }
+  });
+
+  document.querySelectorAll('a[href="#"]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      alert('Demo mode: this action is not connected to backend logic.');
+    });
+  });
+})();
+</script>
+</body>
+</html>

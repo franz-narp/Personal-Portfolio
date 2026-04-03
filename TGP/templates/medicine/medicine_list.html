@@ -1,0 +1,298 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../TGPfavicon.png">
+    <meta charset="UTF-8">
+    <title>TGP Pharmacy</title>
+        <link rel="stylesheet" href="../../static/registration/sidebarstyles.css">
+    <link rel="stylesheet" href="../../static/registration/userliststyles.css">
+</head>
+<body>
+<div class="container">
+    <div class="sidebar" id="sidebar">
+    <div class="logo-container">
+        <img src="../../static/landingpage/photo/logo.png" alt="TGP Logo">
+    </div>
+    <ul class="menu">
+        <li><a href="../dashboard/dashboard_demo.html">Dashboard</a></li>
+        <li><a href="../registration/userlist.html">User Accounts</a></li>
+        <li><a href="../medicine/medicine_list.html">Product</a></li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-po')">Purchase Orders</a>
+            <ul id="dropdown-po" class="dropdown-menu">
+                <li><a href="../medicine/purchase_order_form.html">New Order</a></li>
+                <li><a href="../medicine/purchase_order_list.html">View Orders</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-stock')">Stock Analysis</a>
+            <ul id="dropdown-stock" class="dropdown-menu">
+                <li><a href="../transfer/transfer_form.html">Stock Transfer</a></li>
+                <li><a href="../medicine/batch_list.html">Stock Batches</a></li>
+                <li><a href="../medicine/actual_inventory.html">Inventory</a></li>
+                <li><a href="../medicine/expiration_monitor.html">Expiration</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-logs')">Logs</a>
+            <ul id="dropdown-logs" class="dropdown-menu">
+                <li><a href="../dashboard/activity_logs.html">Activity Logs</a></li>
+                <li><a href="../medicine/movement_list.html">Stock Movement</a></li>
+                <li><a href="../notifications/notification_list.html">Notifications</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-sales')">Sales</a>
+            <ul id="dropdown-sales" class="dropdown-menu">
+                <li><a href="../medicine/dispense_form.html">Dispense</a></li>
+                <li><a href="../sales/sales_report.html">Sales Report</a></li>
+                <li><a href="../medicine/price_history.html">Price History</a></li>
+                <li><a href="../sales/refund_list.html">Refunds</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-account')">Account</a>
+            <ul id="dropdown-account" class="dropdown-menu">
+                <li><a href="../registration/updateaccount.html">Update Account</a></li>
+                <li><a href="../registration/updatepassword.html">Update Password</a></li>
+            </ul>
+        </li>
+
+        <li><a href="../ordering/ordering_list.html">Orders</a></li>
+        <li><a href="../landingpage/landingpage.html">Logout</a></li>
+    </ul>
+</div>
+<script>
+function toggleDropdown(id) {
+    const dropdown = document.getElementById(id);
+    if (!dropdown) return;
+    const dropdownLi = dropdown.parentElement;
+    dropdown.classList.toggle('open');
+    dropdown.classList.toggle('show');
+    dropdownLi.classList.toggle('open');
+}
+
+(function initSidebarState() {
+    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+    const links = document.querySelectorAll('.sidebar .menu a[href]');
+
+    links.forEach(function (link) {
+        const href = (link.getAttribute('href') || '').trim();
+        if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+        const targetPage = href.split('/').pop().toLowerCase();
+        if (targetPage && targetPage === currentPage) {
+            const li = link.closest('li');
+            if (li) li.classList.add('active');
+
+            const menu = link.closest('.dropdown-menu');
+            if (menu) {
+                menu.classList.add('open');
+                menu.classList.add('show');
+                const parent = menu.closest('.dropdown');
+                if (parent) parent.classList.add('open');
+            }
+        }
+    });
+})();
+</script>
+
+    <div class="main-content">
+        <h2>Products (Medicines)</h2>
+
+        
+            <div style="margin-bottom: 20px;">
+                
+                    <div style="padding: 10px; margin-bottom: 10px; border-radius: 4px; 
+                                background: #d4edda; color: #155724;
+                                background: #f8d7da; color: #721c24;
+                                background: #d1ecf1; color: #0c5460;">
+                        
+                    </div>
+                
+            </div>
+        
+
+        <div class="search-form">
+            <form method="get" style="display: flex; gap: 10px; flex: 1;">
+                <input type="text" name="search" placeholder="Search products..." value="" style="flex: 1;">
+                <button type="submit">Search</button>
+            </form>
+            <button type="button" class="btn-create" data-url="#" onclick="openModal(this.getAttribute('data-url'))" style="text-decoration: none; display: inline-block; line-height: 1.5; border: none; cursor: pointer;">+ Add Product</button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Name</th>
+                        <th>Brand</th>
+                        <th>Category</th>
+                        <th>Product Type</th>
+                        <th>Dosage Form</th>
+                        <th>Strength</th>
+                        <th>Base Price</th>
+                        <th>Selling Price</th>
+                        <th>Actions</th>
+                    </tr>
+                </thead>
+                <tbody>
+                
+                    <tr>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>₱</td>
+                        <td>₱</td>
+                        <td>
+                            <div class="action-buttons">
+                                <button type="button" class="block-btn" data-url="#" onclick="openModal(this.getAttribute('data-url'))">Edit</button>
+                                
+                                    <button type="button" class="block-btn" data-url="#" onclick="openModal(this.getAttribute('data-url'))" title="Update Price Only">💰 Price</button>
+                                
+                                <form action="#" method="post" style="display:inline;">
+                                    
+                                    <button type="submit" class="block-btn" onclick="return confirm('Are you sure you want to delete this product?')">Delete</button>
+                                </form>
+                            </div>
+                        </td>
+                    </tr>
+                
+                    <tr>
+                        <td colspan="9" style="text-align:center;">No products found.</td>
+                    </tr>
+                
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleDropdown(dropdownId) {
+        const dropdown = document.getElementById(dropdownId);
+        const dropdownLi = dropdown.parentElement;
+        
+        // Toggle the 'open' class on both the dropdown menu and the parent li
+        dropdown.classList.toggle('open');
+        dropdown.classList.toggle('show');
+        dropdownLi.classList.toggle('open');
+    }
+
+    // Close dropdowns when clicking outside
+    document.addEventListener('click', function(event) {
+        if (!event.target.closest('.dropdown')) {
+            var allDropdowns = document.querySelectorAll('.dropdown-menu');
+            var allParents = document.querySelectorAll('.dropdown');
+            allDropdowns.forEach(function(dd) {
+                dd.classList.remove('show');
+            });
+            allParents.forEach(function(parent) {
+                parent.classList.remove('open');
+            });
+        }
+    });
+
+    // Modal logic
+    function openModal(fetchUrl) {
+        const modal = document.getElementById('generic-modal');
+        const modalContent = document.getElementById('generic-modal-content');
+        modalContent.innerHTML = '<div style="padding:20px;">Loading...</div>';
+        modal.style.display = 'flex';
+        fetch(fetchUrl, {headers: {'X-Requested-With': 'XMLHttpRequest'}})
+            .then(r => r.json())
+            .then(data => {
+                if (data.html) {
+                    modalContent.innerHTML = data.html;
+                    attachModalFormHandler(modalContent);
+                } else {
+                    modalContent.innerHTML = '<div style="padding:20px;color:red;">Failed to load form.</div>';
+                }
+            })
+            .catch(err => {
+                console.error('Modal fetch error:', err);
+                modalContent.innerHTML = '<div style="padding:20px;color:red;">Error loading form.</div>';
+            });
+    }
+    
+    function closeModal() {
+        const modal = document.getElementById('generic-modal');
+        modal.style.display = 'none';
+    }
+    
+    function attachModalFormHandler(container) {
+        const form = container.querySelector('form');
+        if (!form) return;
+        form.addEventListener('submit', function(e){
+            e.preventDefault();
+            const formData = new FormData(form);
+            fetch(form.getAttribute('action') || window.location.href, {
+                method: 'POST',
+                headers: {'X-Requested-With': 'XMLHttpRequest'},
+                body: formData
+            }).then(r => r.json())
+              .then(data => {
+                  if (data.success) {
+                      closeModal();
+                      window.location.reload();
+                  } else if (data.html) {
+                      container.innerHTML = data.html;
+                      attachModalFormHandler(container);
+                  } else if (data.error) {
+                      alert('Error: ' + data.error);
+                  } else {
+                      alert('Save failed');
+                  }
+              }).catch(err => {
+                  console.error('Form submit error:', err);
+                  alert('Network error');
+              });
+        });
+    }
+
+    // Close modal on outside click
+    window.addEventListener('click', function(e){
+        const modal = document.getElementById('generic-modal');
+        if (e.target === modal) closeModal();
+    });
+</script>
+
+<div id="generic-modal" style="position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.5);display:none;align-items:center;justify-content:center;z-index:1000;">
+    <div id="generic-modal-content" style="background:#fff;min-width:480px;max-width:800px;width:70%;border-radius:8px;box-shadow:0 4px 12px rgba(0,0,0,0.3);overflow-y:auto;max-height:90vh;padding:10px;">
+        <!-- Dynamic content injected here -->
+    </div>
+</div>
+
+<script>
+(function () {
+  if (window.__tgpDemoMode) return;
+  window.__tgpDemoMode = true;
+
+  document.querySelectorAll('form').forEach(function (form) {
+    var action = (form.getAttribute('action') || '').trim();
+    if (!action || action === '#' || action.toLowerCase().startsWith('javascript:')) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        alert('Demo mode: form submission is disabled.');
+      });
+    }
+  });
+
+  document.querySelectorAll('a[href="#"]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      alert('Demo mode: this action is not connected to backend logic.');
+    });
+  });
+})();
+</script>
+</body>
+</html>

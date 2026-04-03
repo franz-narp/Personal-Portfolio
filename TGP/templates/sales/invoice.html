@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../TGPfavicon.png">
+    <meta charset="UTF-8">
+    <title>TGP Pharmacy</title>
+    <style>
+        body { font-family: Arial, sans-serif; margin: 40px; color: #333; }
+        h1, h2, h4 { text-align: center; }
+        table { width: 100%; border-collapse: collapse; margin-top: 20px; }
+        th, td { padding: 8px; border: 1px solid #ccc; text-align: left; }
+        th { background-color: #f5f5f5; }
+        .totals { margin-top: 20px; float: right; }
+        hr { margin-top: 20px; margin-bottom: 20px; }
+    </style>
+</head>
+<body>
+<a href="#">← Go back</a>
+    <h1></h1>
+    <p><strong>Address:</strong> <br>
+       <strong>Contact:</strong> </p>
+
+    <hr>
+
+    <!-- Updated Invoice Header -->
+     <h2>Invoice #</h2>
+     <p><strong>Date:</strong> <br>
+         <strong>Pharmacist:</strong> <br>
+         <strong>Customer Type:</strong> <br>
+         <strong>Payment Method:</strong>  </p>
+
+    <!-- Updated Invoice Table -->
+    <table class="table table-bordered mt-3">
+        <thead>
+            <tr>
+                <th>Medicine</th>
+                <th>Quantity</th>
+                <th>Unit Type</th>
+                <th>Total Pieces</th>
+                <th>Unit Price (per piece)</th>
+                <th>Line Total</th>
+            </tr>
+        </thead>
+        <tbody>
+            
+            <tr>
+                <td></td>
+                <td></td>
+                <td></td>
+                <td> pcs</td>
+                <td>₱</td>
+                <td>₱</td>
+            </tr>
+            
+        </tbody>
+    </table>
+
+    <hr>
+
+    <!-- Totals -->
+    <div class="totals">
+        <p><strong>Subtotal:</strong> ₱<span id="subtotal"></span></p>
+        <p><strong>Discount (%):</strong> -₱<span id="discount"></span></p>
+        <p><strong>VAT (12%):</strong> ₱<span id="vat">0.00</span></p>
+        <p><strong>Final Total:</strong> ₱<span id="finalTotal"></span></p>
+        <p><strong>Cash Received:</strong> ₱<span id="cashReceived"></span></p>
+        <p><strong>Change:</strong> ₱<span id="change"></span></p>
+    </div>
+
+    <script>
+        // Calculate VAT and update totals on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            const subtotal = parseFloat();
+            const discount = parseFloat();
+            const cashReceived = parseFloat();
+            
+            // Calculate amount after discount
+            const amountAfterDiscount = subtotal - discount;
+            
+            // Calculate 12% VAT
+            const vat = amountAfterDiscount * 0.12;
+            
+            // Calculate final total with VAT
+            const finalTotal = amountAfterDiscount + vat;
+            
+            // Calculate change
+            const change = cashReceived - finalTotal;
+            
+            // Update the display
+            document.getElementById('vat').textContent = vat.toFixed(2);
+            document.getElementById('finalTotal').textContent = finalTotal.toFixed(2);
+            document.getElementById('change').textContent = change.toFixed(2);
+        });
+    </script>
+<script>
+(function () {
+  if (window.__tgpDemoMode) return;
+  window.__tgpDemoMode = true;
+
+  document.querySelectorAll('form').forEach(function (form) {
+    var action = (form.getAttribute('action') || '').trim();
+    if (!action || action === '#' || action.toLowerCase().startsWith('javascript:')) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        alert('Demo mode: form submission is disabled.');
+      });
+    }
+  });
+
+  document.querySelectorAll('a[href="#"]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      alert('Demo mode: this action is not connected to backend logic.');
+    });
+  });
+})();
+</script>
+</body>
+</html>

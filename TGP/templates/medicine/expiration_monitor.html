@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../TGPfavicon.png">
+    <meta charset="UTF-8">
+    <title>TGP Pharmacy</title>
+        <link rel="stylesheet" href="../../static/registration/sidebarstyles.css">
+    <link rel="stylesheet" href="../../static/registration/userliststyles.css">
+    <style>
+        .alert-cards {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+        .alert-card {
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+            color: white;
+        }
+        .alert-card.expired {
+            background: linear-gradient(135deg, #d32f2f 0%, #c62828 100%);
+        }
+        .alert-card.warning {
+            background: linear-gradient(135deg, #f57c00 0%, #ef6c00 100%);
+        }
+        .alert-card h3 {
+            margin: 0 0 10px 0;
+            font-size: 1.1em;
+            opacity: 0.9;
+        }
+        .alert-card .value {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+        .alert-card small {
+            opacity: 0.85;
+        }
+        .filter-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+        .filter-tabs a {
+            padding: 12px 24px;
+            background: #e0e0e0;
+            color: #333;
+            text-decoration: none;
+            border-radius: 5px;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+        .filter-tabs a:hover {
+            background: #bdbdbd;
+        }
+        .filter-tabs a.active {
+            background: #2196F3;
+            color: white;
+        }
+        tr.expired {
+            background-color: #ffebee !important;
+        }
+        tr.expiring-soon {
+            background-color: #fff3e0 !important;
+        }
+        .status-badge {
+            padding: 4px 12px;
+            border-radius: 12px;
+            font-size: 0.85em;
+            font-weight: bold;
+        }
+        .status-expired {
+            background: #d32f2f;
+            color: white;
+        }
+        .status-near-expiry {
+            background: #ffa000;
+            color: white;
+        }
+        .status-good {
+            background: #388e3c;
+            color: white;
+        }
+        .status-critical {
+            background: #f57c00;
+            color: white;
+        }
+        .status-warning {
+            background: #ffa000;
+            color: white;
+        }
+        .right-align {
+            text-align: right;
+        }
+        .action-button {
+            padding: 6px 12px;
+            background: #2196F3;
+            color: white;
+            text-decoration: none;
+            border-radius: 3px;
+            font-size: 0.9em;
+            display: inline-block;
+            margin: 2px;
+            border: none;
+            cursor: pointer;
+        }
+        .action-button:hover {
+            background: #1976D2;
+        }
+        .action-button.delete {
+            background: #d32f2f;
+        }
+        .action-button.delete:hover {
+            background: #b71c1c;
+        }
+        .info-box {
+            margin-top: 30px;
+            padding: 15px;
+            background: #fff3e0;
+            border-left: 4px solid #f57c00;
+            border-radius: 4px;
+        }
+        .info-box strong {
+            color: #ef6c00;
+        }
+        .info-box ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .info-box li {
+            margin: 5px 0;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="sidebar" id="sidebar">
+    <div class="logo-container">
+        <img src="../../static/landingpage/photo/logo.png" alt="TGP Logo">
+    </div>
+    <ul class="menu">
+        <li><a href="../dashboard/dashboard_demo.html">Dashboard</a></li>
+        <li><a href="../registration/userlist.html">User Accounts</a></li>
+        <li><a href="../medicine/medicine_list.html">Product</a></li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-po')">Purchase Orders</a>
+            <ul id="dropdown-po" class="dropdown-menu">
+                <li><a href="../medicine/purchase_order_form.html">New Order</a></li>
+                <li><a href="../medicine/purchase_order_list.html">View Orders</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-stock')">Stock Analysis</a>
+            <ul id="dropdown-stock" class="dropdown-menu">
+                <li><a href="../transfer/transfer_form.html">Stock Transfer</a></li>
+                <li><a href="../medicine/batch_list.html">Stock Batches</a></li>
+                <li><a href="../medicine/actual_inventory.html">Inventory</a></li>
+                <li><a href="../medicine/expiration_monitor.html">Expiration</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-logs')">Logs</a>
+            <ul id="dropdown-logs" class="dropdown-menu">
+                <li><a href="../dashboard/activity_logs.html">Activity Logs</a></li>
+                <li><a href="../medicine/movement_list.html">Stock Movement</a></li>
+                <li><a href="../notifications/notification_list.html">Notifications</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-sales')">Sales</a>
+            <ul id="dropdown-sales" class="dropdown-menu">
+                <li><a href="../medicine/dispense_form.html">Dispense</a></li>
+                <li><a href="../sales/sales_report.html">Sales Report</a></li>
+                <li><a href="../medicine/price_history.html">Price History</a></li>
+                <li><a href="../sales/refund_list.html">Refunds</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-account')">Account</a>
+            <ul id="dropdown-account" class="dropdown-menu">
+                <li><a href="../registration/updateaccount.html">Update Account</a></li>
+                <li><a href="../registration/updatepassword.html">Update Password</a></li>
+            </ul>
+        </li>
+
+        <li><a href="../ordering/ordering_list.html">Orders</a></li>
+        <li><a href="../landingpage/landingpage.html">Logout</a></li>
+    </ul>
+</div>
+<script>
+function toggleDropdown(id) {
+    const dropdown = document.getElementById(id);
+    if (!dropdown) return;
+    const dropdownLi = dropdown.parentElement;
+    dropdown.classList.toggle('open');
+    dropdown.classList.toggle('show');
+    dropdownLi.classList.toggle('open');
+}
+
+(function initSidebarState() {
+    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+    const links = document.querySelectorAll('.sidebar .menu a[href]');
+
+    links.forEach(function (link) {
+        const href = (link.getAttribute('href') || '').trim();
+        if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+        const targetPage = href.split('/').pop().toLowerCase();
+        if (targetPage && targetPage === currentPage) {
+            const li = link.closest('li');
+            if (li) li.classList.add('active');
+
+            const menu = link.closest('.dropdown-menu');
+            if (menu) {
+                menu.classList.add('open');
+                menu.classList.add('show');
+                const parent = menu.closest('.dropdown');
+                if (parent) parent.classList.add('open');
+            }
+        }
+    });
+})();
+</script>
+
+    <div class="main-content">
+        <h2>Batch Expiration Monitor</h2>
+
+        <div class="alert-cards">
+            <div class="alert-card expired">
+                <h3>⚠ Expired Batches</h3>
+                <div class="value"></div>
+                <small>requires immediate attention</small>
+            </div>
+            <div class="alert-card warning">
+                <h3>⏰ Expiring in 6 Months</h3>
+                <div class="value"></div>
+                <small>store policy: 6 months before expiration</small>
+            </div>
+        </div>
+
+        <div class="filter-tabs">
+            <a href="?filter=all" class="active">All Batches</a>
+            <a href="?filter=expired" class="active">Expired Only</a>
+            <a href="?filter=expiring_soon" class="active">Expiring in 6 Months</a>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Medicine Name</th>
+                        <th style="width: 8%;">Batch ID</th>
+                        <th style="width: 10%;">Location</th>
+                        <th style="width: 11%;">Received Date</th>
+                        <th style="width: 11%;">Expiry Date</th>
+                        <th style="width: 12%;">Days Until Expiry</th>
+                        <th style="width: 10%;">Status</th>
+                        <th style="width: 12%;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    
+                    
+                    
+                    
+                    
+                    <tr class="expired">
+                        <td>
+                            <strong></strong>
+                            <small style="display: block; color: #666;"></small>
+                        </td>
+                        <td>#</td>
+                        <td></td>
+                        <td></td>
+                        <td></td>
+                        <td>
+                            
+                                <span class="status-badge status-expired">EXPIRED</span>
+                            
+                                
+                            
+                        </td>
+                        <td>
+                            
+                                <span class="status-badge status-expired">● Expired</span>
+                            
+                                <span class="status-badge status-near-expiry">● Near Expiry</span>
+                            
+                                <span class="status-badge status-good">● Good</span>
+                            
+                        </td>
+                        <td>
+                            
+                                <button onclick="openStockOutModal()" class="action-button delete">Remove</button>
+                            
+                                <button onclick="openStockOutModal()" class="action-button delete">Remove</button>
+                            
+                                <span style="color: #999;">-</span>
+                            
+                        </td>
+                    </tr>
+                    
+                    
+                    
+                    
+                    <tr>
+                        <td colspan="8" style="text-align: center; padding: 40px; color: #999;">No batches found.</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Stock Out Modal -->
+<div id="stockOutModal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.6); z-index: 9999; justify-content: center; align-items: center;">
+    <div style="background: white; border-radius: 8px; max-width: 600px; width: 90%; max-height: 90vh; overflow-y: auto; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+        <div style="background: #d32f2f; color: white; padding: 20px; border-radius: 8px 8px 0 0; display: flex; justify-content: space-between; align-items: center;">
+            <h3 style="margin: 0; display: flex; align-items: center; gap: 10px;"><span style="font-size: 1.5em;">⚠️</span> Remove Expired Batch</h3>
+            <button onclick="closeStockOutModal()" style="background: none; border: none; color: white; font-size: 1.5em; cursor: pointer; padding: 0; line-height: 1;">&times;</button>
+        </div>
+        <div id="stockOutModalContent" style="padding: 25px;">
+            <!-- Content loaded via AJAX -->
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("collapsed");
+    }
+
+    function toggleDropdown(id) {
+        const dropdown = document.getElementById(id);
+        const dropdownLi = dropdown.parentElement;
+        
+        // Toggle the 'open' class on both the dropdown menu and the parent li
+        dropdown.classList.toggle('open');
+        dropdownLi.classList.toggle('open');
+    }
+
+    function openStockOutModal(batchId) {
+        const modal = document.getElementById('stockOutModal');
+        const content = document.getElementById('stockOutModalContent');
+        
+        // Show modal
+        modal.style.display = 'flex';
+        content.innerHTML = '<p style="text-align: center; padding: 40px;">Loading...</p>';
+        
+        // Fetch modal content
+        fetch(`/batches/${batchId}/stockout-expired/`, {
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest'
+            }
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.html) {
+                content.innerHTML = data.html;
+            } else {
+                content.innerHTML = '<p style="color: red; padding: 20px;">Error loading batch details</p>';
+            }
+        })
+        .catch(error => {
+            content.innerHTML = '<p style="color: red; padding: 20px;">Error: ' + error.message + '</p>';
+        });
+    }
+
+    function closeStockOutModal() {
+        document.getElementById('stockOutModal').style.display = 'none';
+    }
+
+    function submitStockOut(batchId) {
+        const content = document.getElementById('stockOutModalContent');
+        const reasonField = document.getElementById('removal_reason');
+        
+        if (!reasonField || !reasonField.value.trim()) {
+            alert('Please provide a reason for removal.');
+            return;
+        }
+        
+        content.innerHTML = '<p style="text-align: center; padding: 40px;">Processing...</p>';
+        
+        fetch(`/batches/${batchId}/stockout-expired/`, {
+            method: 'POST',
+            headers: {
+                'X-Requested-With': 'XMLHttpRequest',
+                'Content-Type': 'application/json',
+                'X-CSRFToken': document.querySelector('[name=csrfmiddlewaretoken]').value
+            },
+            body: JSON.stringify({
+                reason: reasonField.value.trim()
+            })
+        })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                closeStockOutModal();
+                location.reload();
+            } else {
+                content.innerHTML = '<p style="color: red; padding: 20px;">Error: ' + (data.error || 'Unknown error') + '</p>';
+            }
+        })
+        .catch(error => {
+            content.innerHTML = '<p style="color: red; padding: 20px;">Error: ' + error.message + '</p>';
+        });
+    }
+
+    // Close modal on background click
+    document.getElementById('stockOutModal')?.addEventListener('click', function(e) {
+        if (e.target === this) {
+            closeStockOutModal();
+        }
+    });
+</script>
+<script>
+(function () {
+  if (window.__tgpDemoMode) return;
+  window.__tgpDemoMode = true;
+
+  document.querySelectorAll('form').forEach(function (form) {
+    var action = (form.getAttribute('action') || '').trim();
+    if (!action || action === '#' || action.toLowerCase().startsWith('javascript:')) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        alert('Demo mode: form submission is disabled.');
+      });
+    }
+  });
+
+  document.querySelectorAll('a[href="#"]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      alert('Demo mode: this action is not connected to backend logic.');
+    });
+  });
+})();
+</script>
+</body>
+</html>

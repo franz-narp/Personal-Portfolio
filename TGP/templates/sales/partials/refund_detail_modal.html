@@ -1,0 +1,39 @@
+<style>
+.modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 14px; padding: 20px; }
+.modal-grid label { display:flex; flex-direction:column; font-weight:500; }
+.modal-grid label.full-width { grid-column:1 / -1; }
+.modal-actions { display:flex; gap:10px; justify-content:flex-end; padding:0 20px 20px; }
+.badge { display:inline-block; padding:4px 8px; border-radius:4px; font-size:12px; }
+.badge-warning { background:#fff3cd; color:#856404; }
+.badge-success { background:#d4edda; color:#155724; }
+</style>
+<form method="post" id="refund-detail-form">
+  <h3 style="margin:0; padding:20px 20px 10px;">Refund #</h3>
+  <div class="modal-grid">
+    <label class="full-width">Sale # </label>
+    <label>Date <span style="margin-top:5px;"></span></label>
+    <label>Amount Refunded <span style="margin-top:5px;">₱</span></label>
+    <label>Reason <span style="margin-top:5px;"></span></label>
+    
+    <label class="full-width">Details <span style="margin-top:5px;"></span></label>
+    
+    <label>Processed By <span style="margin-top:5px;"></span></label>
+    <label>Status <span style="margin-top:5px;"> <span class="badge badge-warning">Awaiting Approval</span><span class="badge badge-success">Approved</span></span></label>
+    <label>Payment Method <span style="margin-top:5px;">N/A</span></label>
+    
+    <label>Reference # <span style="margin-top:5px;"></span></label>
+    
+    
+    <label>Approved By <span style="margin-top:5px;"> on </span></label>
+    
+  </div>
+  <div class="modal-actions">
+    
+    <form method="post" action="#" class="approve-refund-form" data-refund-id="" style="margin:0;">
+      
+      <button type="submit" class="btn-view" style="background:#4caf50; color:#fff; border:none; padding:8px 16px; border-radius:4px; cursor:pointer;">Approve</button>
+    </form>
+    
+    <button type="button" class="btn-cancel" onclick="closeDynamicModal()" style="background:#777;color:#fff;border:none;padding:8px 16px;border-radius:4px;cursor:pointer;">Close</button>
+  </div>
+</form>

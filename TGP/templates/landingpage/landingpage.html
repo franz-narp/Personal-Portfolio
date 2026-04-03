@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../TGPfavicon.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TGP Pharmacy</title>
+
+    <link rel="stylesheet" href="../../static/landingpage/landingpagestyles.css">
+	<link rel="stylesheet" href="../../static/landingpage/navigationbarlanding.css">
+    <style>
+        .demo-modal-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.6);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .demo-modal {
+            background: #fff;
+            width: min(92vw, 560px);
+            border-radius: 12px;
+            padding: 24px;
+            box-shadow: 0 12px 30px rgba(0, 0, 0, 0.25);
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        .demo-modal h3 {
+            margin: 0 0 12px;
+            color: #c00000;
+        }
+
+        .demo-modal p {
+            margin: 0 0 12px;
+            line-height: 1.5;
+        }
+
+        .demo-modal .repo-link {
+            display: inline-block;
+            margin-bottom: 16px;
+            word-break: break-all;
+            color: #0b57d0;
+        }
+
+        .demo-modal .demo-close {
+            background: #c00000;
+            color: #fff;
+            border: none;
+            padding: 10px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+        }
+    </style>
+</head>
+<body>
+    <div id="demoModalOverlay" class="demo-modal-overlay" role="dialog" aria-modal="true" aria-labelledby="demoModalTitle">
+        <div class="demo-modal">
+            <h3 id="demoModalTitle">Frontend Demo Notice</h3>
+            <p>This project is a demo and contains frontend only (no backend).</p>
+            <p>Please download the full project in this repository:</p>
+            <a class="repo-link" href="https://github.com/franz-narp/Pharmacy-Inventory-Management.git" target="_blank" rel="noopener noreferrer">https://github.com/franz-narp/Pharmacy-Inventory-Management.git</a>
+            <div>
+                <button type="button" id="demoModalClose" class="demo-close">Got it</button>
+            </div>
+        </div>
+    </div>
+<header>
+        <div class="logo">
+            <img src="../../static/landingpage/photo/logo.png" alt="TGP Logo" width="100">
+        </div>
+        <nav>
+            <ul>    
+                <li><a href="landingpage.html" class="active">HOME</a></li>
+                <li><a href="about.html">ABOUT US</a></li>
+                <li><a href="services.html">SERVICES</a></li>
+                <li><a href="contact.html">CONTACT US</a></li>
+            </ul>
+        </nav>
+        <a href="../dashboard/dashboard_demo.html" class="login-btn">LOGIN</a>
+    </header>
+
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <div class="hero-text">
+            <h2>PARA SA LAHAT <br><span>QUALITY GENERICS YOU CAN TRUST</span></h2>
+            <p>
+                Affordable, FDA approved medicine available in over <strong>2,000 branches nationwide</strong>, 
+                bringing quality healthcare closer to every Filipino family. Wherever you are in the city or the 
+                province, TGP tagapagtanggol ng kalusugan is here to make kalusugan para sa lahat.
+            </p>
+        </div>
+        <div class="hero-image">
+            <div class="circle-bg"></div>
+            <img src="../../static/landingpage/photo/pharmacists.png" alt="Two Pharmacists">
+        </div>
+    </section>
+
+    <!-- WHY PAY MORE SECTION -->
+    <section class="why-pay">
+        <h2>Why <span>PAY</span> more? Choose Generics and Save</h2>
+        <div class="why-grid">
+            <div class="why-item">
+                <h3>Same Quality</h3>
+                <p>All TGP medicines meet FDA standards and provide the same healing power as branded drugs.</p>
+            </div>
+            <div class="why-item">
+                <h3>More Affordable</h3>
+                <p>Generics offer big savings while keeping families healthy and secure.</p>
+            </div>
+            <div class="why-item">
+                <h3>Trusted Nationwide</h3>
+                <p>Serving millions of Filipinos through over 2,000 branches for more than two decades.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- YOUTUBE PROMO SECTION -->
+    <section class="youtube-section">
+        <div class="youtube-bg">
+            <img src="../../static/landingpage/photo/youtubepharma.png" alt="YouTube Background">
+            <div class="youtube-overlay"></div>
+        </div>
+        <div class="youtube-content">
+            <h2>Visit Our Official Youtube Channel</h2>
+            <a href="https://www.youtube.com/@TGPTheGenericsPharmacy" 
+            class="youtube-btn" 
+            target="_blank" 
+            rel="noopener noreferrer">
+            CLICK HERE
+            </a>
+        </div>
+    </section>
+
+
+    <!-- FINAL CTA / FOOTER -->
+    <section class="final-cta">
+        <h3>Join Millions of Filipinos Who Choose Smart, Affordable Healthcare.</h3>
+        <h1>GAMOT AY TAMA, ALAGANG TGP</h1>
+    </section>
+
+    <footer>
+        <div class="footer-logo">
+            <img src="../../static/landingpage/photo/logo.png" alt="TGP Logo" width="70">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="landingpage.html">HOME</a></li>
+                <li><a href="about.html">ABOUT US</a></li>
+                <li><a href="services.html">SERVICES</a></li>
+                <li><a href="contact.html">CONTACT US</a></li>
+            </ul>
+        </nav>
+        <p>© 2025 The Generics Pharmacy. Kalusugan Para sa Lahat.</p>
+    </footer>
+<script>
+(function () {
+  if (window.__tgpDemoMode) return;
+  window.__tgpDemoMode = true;
+
+  document.querySelectorAll('form').forEach(function (form) {
+    var action = (form.getAttribute('action') || '').trim();
+    if (!action || action === '#' || action.toLowerCase().startsWith('javascript:')) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        alert('Demo mode: form submission is disabled.');
+      });
+    }
+  });
+
+  document.querySelectorAll('a[href="#"]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      alert('Demo mode: this action is not connected to backend logic.');
+    });
+  });
+})();
+</script>
+<script>
+    (function () {
+        const overlay = document.getElementById('demoModalOverlay');
+        const closeBtn = document.getElementById('demoModalClose');
+        if (!overlay || !closeBtn) return;
+
+        overlay.style.display = 'flex';
+
+        closeBtn.addEventListener('click', function () {
+            overlay.style.display = 'none';
+        });
+
+        overlay.addEventListener('click', function (event) {
+            if (event.target === overlay) {
+                overlay.style.display = 'none';
+            }
+        });
+    })();
+</script>
+</body>
+</html>

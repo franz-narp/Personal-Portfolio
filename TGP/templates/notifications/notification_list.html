@@ -1,0 +1,395 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../TGPfavicon.png">
+    <meta charset="UTF-8">
+    <title>TGP Pharmacy</title>
+        <link rel="stylesheet" href="../../static/registration/sidebarstyles.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
+            margin: 0;
+        }
+        .container {
+            display: flex;
+        }
+        .main-content {
+            flex: 1;
+            padding: 30px;
+            overflow-y: auto;
+        }
+        .page-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e0e0e0;
+        }
+        h2 {
+            color: #1976d2;
+            margin: 0;
+            font-size: 28px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: #1976d2;
+            color: white;
+            box-shadow: 0 2px 4px rgba(25, 118, 210, 0.3);
+        }
+        .btn-primary:hover {
+            background: #1565c0;
+            box-shadow: 0 4px 8px rgba(25, 118, 210, 0.4);
+            transform: translateY(-1px);
+        }
+        .notification-card {
+            background: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 15px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-left: 5px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: start;
+            transition: all 0.3s ease;
+        }
+        .notification-card:hover {
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            transform: translateX(3px);
+        }
+        .notification-card.unread {
+            background: linear-gradient(to right, #e3f2fd, #ffffff);
+            border-left-color: #1976d2;
+        }
+        .notification-card.expiry {
+            border-left-color: #ff9800;
+        }
+        .notification-card.low_stock {
+            border-left-color: #f44336;
+        }
+        .notification-card.out_of_stock {
+            border-left-color: #d32f2f;
+        }
+        .notification-body {
+            flex: 1;
+        }
+        .notification-header {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 8px;
+        }
+        .notification-icon {
+            font-size: 24px;
+        }
+        .notification-title {
+            font-weight: bold;
+            color: #333;
+            font-size: 16px;
+        }
+        .notification-type {
+            padding: 4px 12px;
+            border-radius: 15px;
+            font-size: 10px;
+            text-transform: uppercase;
+            font-weight: 600;
+            letter-spacing: 0.5px;
+        }
+        .type-expiry {
+            background: #fff3e0;
+            color: #e65100;
+            border: 1px solid #ffb74d;
+        }
+        .type-low_stock {
+            background: #ffebee;
+            color: #c62828;
+            border: 1px solid #ef5350;
+        }
+        .type-out_of_stock {
+            background: #ffcdd2;
+            color: #b71c1c;
+            border: 1px solid #e53935;
+        }
+        .notification-message {
+            color: #555;
+            line-height: 1.6;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+        .notification-time {
+            font-size: 12px;
+            color: #999;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .notification-time::before {
+            content: "🕒";
+        }
+        .notification-actions-btns {
+            display: flex;
+            gap: 8px;
+            flex-direction: column;
+            min-width: 100px;
+        }
+        .btn-small {
+            padding: 8px 14px;
+            font-size: 12px;
+            text-decoration: none;
+            border-radius: 6px;
+            text-align: center;
+            white-space: nowrap;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            border: none;
+            cursor: pointer;
+        }
+        .btn-read {
+            background: #4caf50;
+            color: white;
+        }
+        .btn-read:hover {
+            background: #388e3c;
+            transform: scale(1.05);
+        }
+        .btn-delete {
+            background: #f44336;
+            color: white;
+        }
+        .btn-delete:hover {
+            background: #d32f2f;
+            transform: scale(1.05);
+        }
+        .no-notifications {
+            text-align: center;
+            padding: 60px 20px;
+            background: white;
+            border-radius: 10px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+        .no-notifications p:first-child {
+            font-size: 48px;
+            margin: 0 0 10px 0;
+        }
+        .no-notifications p:last-child {
+            color: #999;
+            font-size: 16px;
+            margin: 0;
+        }
+        .unread-badge {
+            background: linear-gradient(135deg, #f44336, #e91e63);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 13px;
+            font-weight: 600;
+            box-shadow: 0 2px 4px rgba(244, 67, 54, 0.3);
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="sidebar" id="sidebar">
+    <div class="logo-container">
+        <img src="../../static/landingpage/photo/logo.png" alt="TGP Logo">
+    </div>
+    <ul class="menu">
+        <li><a href="../dashboard/dashboard_demo.html">Dashboard</a></li>
+        <li><a href="../registration/userlist.html">User Accounts</a></li>
+        <li><a href="../medicine/medicine_list.html">Product</a></li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-po')">Purchase Orders</a>
+            <ul id="dropdown-po" class="dropdown-menu">
+                <li><a href="../medicine/purchase_order_form.html">New Order</a></li>
+                <li><a href="../medicine/purchase_order_list.html">View Orders</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-stock')">Stock Analysis</a>
+            <ul id="dropdown-stock" class="dropdown-menu">
+                <li><a href="../transfer/transfer_form.html">Stock Transfer</a></li>
+                <li><a href="../medicine/batch_list.html">Stock Batches</a></li>
+                <li><a href="../medicine/actual_inventory.html">Inventory</a></li>
+                <li><a href="../medicine/expiration_monitor.html">Expiration</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-logs')">Logs</a>
+            <ul id="dropdown-logs" class="dropdown-menu">
+                <li><a href="../dashboard/activity_logs.html">Activity Logs</a></li>
+                <li><a href="../medicine/movement_list.html">Stock Movement</a></li>
+                <li><a href="../notifications/notification_list.html">Notifications</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-sales')">Sales</a>
+            <ul id="dropdown-sales" class="dropdown-menu">
+                <li><a href="../medicine/dispense_form.html">Dispense</a></li>
+                <li><a href="../sales/sales_report.html">Sales Report</a></li>
+                <li><a href="../medicine/price_history.html">Price History</a></li>
+                <li><a href="../sales/refund_list.html">Refunds</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-account')">Account</a>
+            <ul id="dropdown-account" class="dropdown-menu">
+                <li><a href="../registration/updateaccount.html">Update Account</a></li>
+                <li><a href="../registration/updatepassword.html">Update Password</a></li>
+            </ul>
+        </li>
+
+        <li><a href="../ordering/ordering_list.html">Orders</a></li>
+        <li><a href="../landingpage/landingpage.html">Logout</a></li>
+    </ul>
+</div>
+<script>
+function toggleDropdown(id) {
+    const dropdown = document.getElementById(id);
+    if (!dropdown) return;
+    const dropdownLi = dropdown.parentElement;
+    dropdown.classList.toggle('open');
+    dropdown.classList.toggle('show');
+    dropdownLi.classList.toggle('open');
+}
+
+(function initSidebarState() {
+    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+    const links = document.querySelectorAll('.sidebar .menu a[href]');
+
+    links.forEach(function (link) {
+        const href = (link.getAttribute('href') || '').trim();
+        if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+        const targetPage = href.split('/').pop().toLowerCase();
+        if (targetPage && targetPage === currentPage) {
+            const li = link.closest('li');
+            if (li) li.classList.add('active');
+
+            const menu = link.closest('.dropdown-menu');
+            if (menu) {
+                menu.classList.add('open');
+                menu.classList.add('show');
+                const parent = menu.closest('.dropdown');
+                if (parent) parent.classList.add('open');
+            }
+        }
+    });
+})();
+</script>
+    
+    <div class="main-content">
+        <div class="page-header">
+            <h2>
+                🔔 Notifications
+                
+                    <span class="unread-badge"> Unread</span>
+                
+            </h2>
+            
+                <a href="#" class="btn btn-primary">✓ Mark All as Read</a>
+            
+        </div>
+        
+        
+            
+                <div class="notification-card unread ">
+                    <div class="notification-body">
+                        <div class="notification-header">
+                            <span class="notification-icon">
+                                ⚠️
+                                📦
+                                🚫
+                                
+                            </span>
+                            <span class="notification-title"></span>
+                            <span class="notification-type type-">
+                                
+                            </span>
+                        </div>
+                        <div class="notification-message">
+                            
+                        </div>
+                        <div class="notification-time">
+                            
+                        </div>
+                    </div>
+                    <div class="notification-actions-btns">
+                        
+                            <a href="#" class="btn-small btn-read">
+                                ✓ Mark Read
+                            </a>
+                        
+                        <a href="#" 
+                           class="btn-small btn-delete"
+                           onclick="return confirm('Delete this notification?')">
+                            ✕ Delete
+                        </a>
+                    </div>
+                </div>
+            
+        
+            <div class="no-notifications">
+                <p>📭 No notifications</p>
+                <p style="font-size: 14px;">You're all caught up!</p>
+            </div>
+        
+    </div>
+</div>
+
+<script>
+function toggleSidebar() {
+    document.getElementById("sidebar").classList.toggle("collapsed");
+}
+
+function toggleDropdown(id) {
+    const dropdown = document.getElementById(id);
+    const dropdownLi = dropdown.parentElement;
+    dropdown.classList.toggle('open');
+    dropdownLi.classList.toggle('open');
+}
+</script>
+<script>
+(function () {
+  if (window.__tgpDemoMode) return;
+  window.__tgpDemoMode = true;
+
+  document.querySelectorAll('form').forEach(function (form) {
+    var action = (form.getAttribute('action') || '').trim();
+    if (!action || action === '#' || action.toLowerCase().startsWith('javascript:')) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        alert('Demo mode: form submission is disabled.');
+      });
+    }
+  });
+
+  document.querySelectorAll('a[href="#"]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      alert('Demo mode: this action is not connected to backend logic.');
+    });
+  });
+})();
+</script>
+</body>
+</html>

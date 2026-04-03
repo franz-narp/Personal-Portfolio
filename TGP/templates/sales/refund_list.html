@@ -1,0 +1,483 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../TGPfavicon.png">
+    <meta charset="UTF-8">
+    <title>TGP Pharmacy</title>
+        <link rel="stylesheet" href="../../static/registration/sidebarstyles.css">
+    <link rel="stylesheet" href="../../static/registration/userliststyles.css">
+    <style>
+        .status-badge {
+            padding: 4px 10px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 500;
+            display: inline-block;
+        }
+        .status-pending {
+            background: #fff9c4;
+            color: #f57f17;
+        }
+        .status-approved {
+            background: #c8e6c9;
+            color: #2e7d32;
+        }
+        .status-rejected {
+            background: #ffcdd2;
+            color: #c62828;
+        }
+        .summary-card {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+            display: flex;
+            gap: 30px;
+        }
+        .summary-item {
+            flex: 1;
+        }
+        .summary-item label {
+            font-size: 12px;
+            color: #666;
+            display: block;
+            margin-bottom: 5px;
+        }
+        .summary-item .value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #333;
+        }
+        .btn-create {
+            background: #2196F3;
+            color: white;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-create:hover {
+            background: #0b7dda;
+        }
+        .btn-view {
+            background: #e53935;
+            color: white;
+            padding: 5px 10px;
+            border: none;
+            border-radius: 3px;
+            cursor: pointer;
+            font-size: 12px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-view:hover {
+            background: #c62828;
+        }
+        /* Modal Styles */
+        /* Modal Styles (consistent with existing site modals) */
+        .modal-overlay {position:fixed; inset:0; background:rgba(0,0,0,.55); display:flex; align-items:center; justify-content:center; z-index:1200;}
+        .hidden {display:none;}
+        .modal-box {background:#ffffff; width:620px; max-width:95%; border-radius:8px; box-shadow:0 6px 18px rgba(0,0,0,.3); overflow:hidden; font-size:14px;}
+        .modal-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; padding: 20px; }
+        .modal-grid label { display:flex; flex-direction:column; font-weight:500; }
+        .modal-grid label.full-width { grid-column:1 / -1; }
+        .modal-grid input, .modal-grid select, .modal-grid textarea { margin-top:5px; padding:8px; border:1px solid #ddd; border-radius:4px; }
+        .modal-actions { display:flex; gap:10px; justify-content:flex-end; padding:0 20px 20px; }
+        .btn-cancel {background:#777; color:#fff; padding:10px 20px; border:none; border-radius:4px; cursor:pointer; font-size:13px;}
+        .btn-cancel:hover {background:#5c5c5c;}
+        .btn-submit {background:#e53935; color:#fff; padding:10px 20px; border:none; border-radius:4px; cursor:pointer; font-size:14px;}
+        .btn-submit:hover {background:#c62828;}
+        .error-list .err {background:#ffebee; color:#c62828; padding:8px 10px; border-radius:4px; margin:0 20px 10px; border:1px solid #ffcdd2;}
+        .modal-box h3 {margin:0; padding:20px 20px 10px;}
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="sidebar" id="sidebar">
+    <div class="logo-container">
+        <img src="../../static/landingpage/photo/logo.png" alt="TGP Logo">
+    </div>
+    <ul class="menu">
+        <li><a href="../dashboard/dashboard_demo.html">Dashboard</a></li>
+        <li><a href="../registration/userlist.html">User Accounts</a></li>
+        <li><a href="../medicine/medicine_list.html">Product</a></li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-po')">Purchase Orders</a>
+            <ul id="dropdown-po" class="dropdown-menu">
+                <li><a href="../medicine/purchase_order_form.html">New Order</a></li>
+                <li><a href="../medicine/purchase_order_list.html">View Orders</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-stock')">Stock Analysis</a>
+            <ul id="dropdown-stock" class="dropdown-menu">
+                <li><a href="../transfer/transfer_form.html">Stock Transfer</a></li>
+                <li><a href="../medicine/batch_list.html">Stock Batches</a></li>
+                <li><a href="../medicine/actual_inventory.html">Inventory</a></li>
+                <li><a href="../medicine/expiration_monitor.html">Expiration</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-logs')">Logs</a>
+            <ul id="dropdown-logs" class="dropdown-menu">
+                <li><a href="../dashboard/activity_logs.html">Activity Logs</a></li>
+                <li><a href="../medicine/movement_list.html">Stock Movement</a></li>
+                <li><a href="../notifications/notification_list.html">Notifications</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-sales')">Sales</a>
+            <ul id="dropdown-sales" class="dropdown-menu">
+                <li><a href="../medicine/dispense_form.html">Dispense</a></li>
+                <li><a href="../sales/sales_report.html">Sales Report</a></li>
+                <li><a href="../medicine/price_history.html">Price History</a></li>
+                <li><a href="../sales/refund_list.html">Refunds</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-account')">Account</a>
+            <ul id="dropdown-account" class="dropdown-menu">
+                <li><a href="../registration/updateaccount.html">Update Account</a></li>
+                <li><a href="../registration/updatepassword.html">Update Password</a></li>
+            </ul>
+        </li>
+
+        <li><a href="../ordering/ordering_list.html">Orders</a></li>
+        <li><a href="../landingpage/landingpage.html">Logout</a></li>
+    </ul>
+</div>
+<script>
+function toggleDropdown(id) {
+    const dropdown = document.getElementById(id);
+    if (!dropdown) return;
+    const dropdownLi = dropdown.parentElement;
+    dropdown.classList.toggle('open');
+    dropdown.classList.toggle('show');
+    dropdownLi.classList.toggle('open');
+}
+
+(function initSidebarState() {
+    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+    const links = document.querySelectorAll('.sidebar .menu a[href]');
+
+    links.forEach(function (link) {
+        const href = (link.getAttribute('href') || '').trim();
+        if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+        const targetPage = href.split('/').pop().toLowerCase();
+        if (targetPage && targetPage === currentPage) {
+            const li = link.closest('li');
+            if (li) li.classList.add('active');
+
+            const menu = link.closest('.dropdown-menu');
+            if (menu) {
+                menu.classList.add('open');
+                menu.classList.add('show');
+                const parent = menu.closest('.dropdown');
+                if (parent) parent.classList.add('open');
+            }
+        }
+    });
+})();
+</script>
+
+    <div class="main-content">
+        <h2>Refunds</h2>
+
+        
+            <div style="margin-bottom: 20px;">
+                
+                    <div style="padding: 10px; margin-bottom: 10px; border-radius: 4px; 
+                                background: #d4edda; color: #155724;
+                                background: #f8d7da; color: #721c24;
+                                background: #d1ecf1; color: #0c5460;">
+                        
+                    </div>
+                
+            </div>
+        
+
+        <div class="summary-card">
+            <div class="summary-item">
+                <label>Total Refunds</label>
+                <div class="value" id="totalRefunds"></div>
+            </div>
+            <div class="summary-item">
+                <label>Pending</label>
+                <div class="value" id="pendingCount" style="color: #f57f17;"></div>
+            </div>
+            <div class="summary-item">
+                <label>Approved</label>
+                <div class="value" id="approvedCount" style="color: #2e7d32;"></div>
+            </div>
+        </div>
+
+        <div class="search-form">
+            <form method="get" style="display: flex; gap: 10px; flex: 1;">
+                <input type="text" name="search" placeholder="Search refunds..." value="" style="flex: 1;">
+                <button type="submit">Search</button>
+            </form>
+            <button type="button" class="btn-create" onclick="openRefundModal()">+ New Refund</button>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 8%;">ID</th>
+                        <th style="width: 10%;">Sale #</th>
+                        <th style="width: 15%;">Date</th>
+                        <th style="width: 12%;">Amount</th>
+                        <th>Reason</th>
+                        <th style="width: 12%;">Processed By</th>
+                        <th style="width: 10%;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr data-refund-id="">
+                        <td><strong>#</strong></td>
+                        <td>#</td>
+                        <td>
+                            
+                            <small style="display: block; color: #666;"></small>
+                        </td>
+                        <td><strong>₱</strong></td>
+                        <td>
+                            <br>
+                            <span class="status-badge status-pendingstatus-approvedstatus-rejected"></span>
+                        </td>
+                        <td></td>
+                        <td style="display:flex; gap:6px; flex-wrap:wrap;">
+                            <button type="button" class="btn-view" onclick="openRefundDetailModal()">View</button>
+                            <!-- Dynamic Refund Detail Modal Container -->
+                            <div id="dynamicModal" class="modal-overlay hidden">
+                                <div class="modal-box" id="dynamicModalContent" style="width:640px; max-width:95%; border-radius:8px; background:#fff; box-shadow:0 6px 18px rgba(0,0,0,.3);">
+                                    <!-- Injected content -->
+                                </div>
+                            </div>
+                            
+                            <form method="post" action="#" class="approve-refund-form" data-refund-id="" style="margin:0;">
+                                
+                                <button type="submit" class="btn-view" style="background:#4caf50;">Approve</button>
+                            </form>
+                            
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td colspan="7" style="text-align: center; padding: 30px; color: #999;">
+                            No refunds found.
+                        </td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Refund Modal -->
+<div id="refundModal" class="modal-overlay hidden">
+    <div class="modal-box">
+        <form id="refundForm" method="post" action="#">
+            
+            <h3>Create Refund</h3>
+            <div id="refundErrors" class="error-list hidden"></div>
+            <div class="modal-grid">
+                <label class="full-width">Sale </label>
+                <label>Reason </label>
+                <label class="full-width">Details (optional) </label>
+                <label>Refund Method </label>
+                <label>Reference Number </label>
+                <label class="full-width" style="flex-direction:row; align-items:center; gap:8px;">
+                     <span><strong>Confirm full refund of sale amount</strong></span>
+                </label>
+            </div>
+            <div class="modal-actions">
+                <button type="submit" class="btn-submit">Process Refund</button>
+                <button type="button" class="btn-cancel" onclick="closeRefundModal()">Cancel</button>
+            </div>
+        </form>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("collapsed");
+    }
+
+    function openRefundModal(){
+        document.getElementById('refundModal').classList.remove('hidden');
+    }
+    function closeRefundModal(){
+        document.getElementById('refundModal').classList.add('hidden');
+    }
+
+    function openRefundDetailModal(refundId){
+        fetch(`/refunds/${refundId}/modal/`, {headers:{'X-Requested-With':'XMLHttpRequest'}})
+            .then(r=>r.json())
+            .then(data=>{
+                if(data.success){
+                    const content = document.getElementById('dynamicModalContent');
+                    content.innerHTML = data.html;
+                    document.getElementById('dynamicModal').classList.remove('hidden');
+                    bindApproveForms(content);
+                }
+            }).catch(err=>console.error(err));
+    }
+    function closeDynamicModal(){
+        document.getElementById('dynamicModal').classList.add('hidden');
+        document.getElementById('dynamicModalContent').innerHTML='';
+    }
+
+    const refundForm = document.getElementById('refundForm');
+    if(refundForm){
+        refundForm.addEventListener('submit', function(e){
+            e.preventDefault();
+            const form = this;
+            const url = form.action;
+            const formData = new FormData(form);
+            fetch(url, {
+                method: 'POST',
+                headers: {'X-Requested-With': 'XMLHttpRequest'},
+                body: formData
+            }).then(r => r.json()).then(data => {
+                if(data.success){
+                    closeRefundModal();
+                    window.location.reload();
+                } else if(data.errors){
+                    const box = document.getElementById('refundErrors');
+                    let html = '';
+                    for(const [field, msgs] of Object.entries(data.errors)){
+                        html += `<div class="err"><strong>${field}:</strong> ${msgs.join(', ')}</div>`;
+                    }
+                    box.innerHTML = html;
+                    box.classList.remove('hidden');
+                }
+            }).catch(err => console.error(err));
+        });
+    }
+
+    // AJAX approve handling
+    function bindApproveForms(scope){
+        scope.querySelectorAll('.approve-refund-form').forEach(f => {
+            f.addEventListener('submit', approveHandler);
+        });
+    }
+    function approveHandler(e){
+        e.preventDefault();
+        const form = this;
+        const url = form.action;
+        const formData = new FormData(form);
+        fetch(url, {
+            method:'POST',
+            headers:{'X-Requested-With':'XMLHttpRequest'},
+            body: formData
+        }).then(r=>r.json()).then(data=>{
+            if(data.success){
+                const pendingEl = document.getElementById('pendingCount');
+                const approvedEl = document.getElementById('approvedCount');
+                if(pendingEl){
+                    const val = parseInt(pendingEl.textContent.trim());
+                    if(val>0) pendingEl.textContent = (val-1).toString();
+                }
+                if(approvedEl){
+                    approvedEl.textContent = (parseInt(approvedEl.textContent.trim()) + 1).toString();
+                }
+                const row = document.querySelector(`tr[data-refund-id='${data.refund_id}']`);
+                if(row){
+                    const badge = row.querySelector('.status-badge');
+                    if(badge){
+                        badge.classList.remove('status-pending');
+                        badge.classList.add('status-approved');
+                        badge.textContent = 'Approved';
+                    }
+                    const approveForm = row.querySelector('form.approve-refund-form');
+                    if(approveForm){ approveForm.remove(); }
+                }
+                showInlineMessage(`Refund #${data.refund_id} approved.`,'success');
+                // If inside modal, update modal status badge and remove button
+                if(form.closest('#dynamicModalContent')){
+                    form.remove();
+                    const modalBadge = form.closest('#dynamicModalContent').querySelector('.badge-warning');
+                    if(modalBadge){
+                        modalBadge.classList.remove('badge-warning');
+                        modalBadge.classList.add('badge-success');
+                        modalBadge.textContent='Approved';
+                    }
+                }
+            } else {
+                showInlineMessage(data.error || 'Approval failed.','error');
+            }
+        }).catch(err => {
+            console.error(err);
+            showInlineMessage('Network error approving refund.','error');
+        });
+    }
+    // Initial binding for forms in table
+    bindApproveForms(document);
+
+    function showInlineMessage(msg,type){
+        let box = document.getElementById('inlineMessages');
+        if(!box){
+            box = document.createElement('div');
+            box.id='inlineMessages';
+            box.style.margin='15px 0';
+            document.querySelector('.main-content h2').after(box);
+        }
+        const div = document.createElement('div');
+        div.textContent = msg;
+        div.style.padding='10px';
+        div.style.borderRadius='4px';
+        div.style.marginBottom='8px';
+        if(type==='success'){div.style.background='#d4edda'; div.style.color='#155724';}
+        else {div.style.background='#f8d7da'; div.style.color='#721c24';}
+        box.appendChild(div);
+        setTimeout(()=>{div.remove();},4000);
+    }
+
+    function toggleDropdown(id) {
+        const dropdown = document.getElementById(id);
+        const dropdownLi = dropdown.parentElement;
+        
+        // Toggle the 'open' class on both the dropdown menu and the parent li
+        dropdown.classList.toggle('open');
+        dropdownLi.classList.toggle('open');
+    }
+</script>
+<script>
+(function () {
+  if (window.__tgpDemoMode) return;
+  window.__tgpDemoMode = true;
+
+  document.querySelectorAll('form').forEach(function (form) {
+    var action = (form.getAttribute('action') || '').trim();
+    if (!action || action === '#' || action.toLowerCase().startsWith('javascript:')) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        alert('Demo mode: form submission is disabled.');
+      });
+    }
+  });
+
+  document.querySelectorAll('a[href="#"]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      alert('Demo mode: this action is not connected to backend logic.');
+    });
+  });
+})();
+</script>
+</body>
+</html>
+

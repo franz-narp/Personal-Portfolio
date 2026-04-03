@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../TGPfavicon.png">
+    <meta charset="UTF-8">
+    <title>TGP Pharmacy</title>
+        <link rel="stylesheet" href="../../static/registration/sidebarstyles.css">
+    <link rel="stylesheet" href="../../static/registration/userliststyles.css">
+    <style>
+        .order-section { margin-bottom: 30px; border: 1px solid #ddd; border-radius: 8px; overflow: hidden; }
+        .order-header { background: #e3f2fd; padding: 15px; display: flex; justify-content: space-between; align-items: center; border-bottom: 2px solid #2196F3; cursor: pointer; transition: background 0.2s; }
+        .order-header:hover { background: #bbdefb; }
+        .order-info { display: flex; gap: 20px; align-items: center; }
+        .order-title { font-size: 18px; font-weight: 600; color: #1976D2; }
+        .toggle-icon { font-size: 20px; margin-right: 10px; transition: transform 0.3s; }
+        .toggle-icon.expanded { transform: rotate(90deg); }
+        .status-badge { padding: 5px 12px; border-radius: 4px; font-size: 13px; font-weight: 500; }
+        .status-draft { background: #e0e0e0; color: #424242; }
+        .status-ordered { background: #b3e5fc; color: #01579b; }
+        .status-delivery { background: #fff9c4; color: #f57f17; }
+        .status-received { background: #c8e6c9; color: #2e7d32; }
+        .status-cancelled { background: #ffcdd2; color: #c62828; }
+        .order-actions { display: flex; gap: 8px; }
+        .line-items { padding: 15px; background: white; display: none; }
+        .line-items.show { display: block; }
+        .line-item { padding: 12px; background: #f9f9f9; margin-bottom: 8px; border-left: 3px solid #2196F3; display: flex; justify-content: space-between; align-items: center; flex-direction: column; align-items: flex-start; }
+        .line-item > div:first-child { width: 100%; display: flex; justify-content: space-between; align-items: center; margin-bottom: 5px; }
+        .medicine-name { font-weight: 500; color: #333; }
+        .quantity { color: #666; }
+        .order-notes { padding: 15px; background: #fffde7; border-top: 1px solid #ddd; font-size: 14px; color: #666; display: none; }
+        .order-notes.show { display: block; }
+        .empty-state { text-align: center; padding: 60px 20px; color: #999; }
+        .empty-icon { font-size: 64px; margin-bottom: 20px; }
+        .item-count { font-size: 13px; color: #666; padding: 3px 8px; background: #fff; border-radius: 12px; }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="sidebar" id="sidebar">
+    <div class="logo-container">
+        <img src="../../static/landingpage/photo/logo.png" alt="TGP Logo">
+    </div>
+    <ul class="menu">
+        <li><a href="../dashboard/dashboard_demo.html">Dashboard</a></li>
+        <li><a href="../registration/userlist.html">User Accounts</a></li>
+        <li><a href="../medicine/medicine_list.html">Product</a></li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-po')">Purchase Orders</a>
+            <ul id="dropdown-po" class="dropdown-menu">
+                <li><a href="../medicine/purchase_order_form.html">New Order</a></li>
+                <li><a href="../medicine/purchase_order_list.html">View Orders</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-stock')">Stock Analysis</a>
+            <ul id="dropdown-stock" class="dropdown-menu">
+                <li><a href="../transfer/transfer_form.html">Stock Transfer</a></li>
+                <li><a href="../medicine/batch_list.html">Stock Batches</a></li>
+                <li><a href="../medicine/actual_inventory.html">Inventory</a></li>
+                <li><a href="../medicine/expiration_monitor.html">Expiration</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-logs')">Logs</a>
+            <ul id="dropdown-logs" class="dropdown-menu">
+                <li><a href="../dashboard/activity_logs.html">Activity Logs</a></li>
+                <li><a href="../medicine/movement_list.html">Stock Movement</a></li>
+                <li><a href="../notifications/notification_list.html">Notifications</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-sales')">Sales</a>
+            <ul id="dropdown-sales" class="dropdown-menu">
+                <li><a href="../medicine/dispense_form.html">Dispense</a></li>
+                <li><a href="../sales/sales_report.html">Sales Report</a></li>
+                <li><a href="../medicine/price_history.html">Price History</a></li>
+                <li><a href="../sales/refund_list.html">Refunds</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-account')">Account</a>
+            <ul id="dropdown-account" class="dropdown-menu">
+                <li><a href="../registration/updateaccount.html">Update Account</a></li>
+                <li><a href="../registration/updatepassword.html">Update Password</a></li>
+            </ul>
+        </li>
+
+        <li><a href="../ordering/ordering_list.html">Orders</a></li>
+        <li><a href="../landingpage/landingpage.html">Logout</a></li>
+    </ul>
+</div>
+<script>
+function toggleDropdown(id) {
+    const dropdown = document.getElementById(id);
+    if (!dropdown) return;
+    const dropdownLi = dropdown.parentElement;
+    dropdown.classList.toggle('open');
+    dropdown.classList.toggle('show');
+    dropdownLi.classList.toggle('open');
+}
+
+(function initSidebarState() {
+    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+    const links = document.querySelectorAll('.sidebar .menu a[href]');
+
+    links.forEach(function (link) {
+        const href = (link.getAttribute('href') || '').trim();
+        if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+        const targetPage = href.split('/').pop().toLowerCase();
+        if (targetPage && targetPage === currentPage) {
+            const li = link.closest('li');
+            if (li) li.classList.add('active');
+
+            const menu = link.closest('.dropdown-menu');
+            if (menu) {
+                menu.classList.add('open');
+                menu.classList.add('show');
+                const parent = menu.closest('.dropdown');
+                if (parent) parent.classList.add('open');
+            }
+        }
+    });
+})();
+</script>
+
+    <div class="main-content">
+        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px;">
+            <h2>Purchase Orders</h2>
+            <a href="#" style="background: #d32f2f; color: white; text-decoration: none; padding: 10px 20px; border-radius: 4px; font-weight: 500; display: inline-block; border: none; cursor: pointer;">+ New Purchase Order</a>
+        </div>
+
+        
+            <div style="margin-bottom: 20px;">
+                
+                    <div style="padding: 12px; margin-bottom: 10px; border-radius: 4px; 
+                                background: #d4edda; color: #155724;
+                                background: #f8d7da; color: #721c24;">
+                        
+                    </div>
+                
+            </div>
+        
+
+        
+            
+            <div class="order-section">
+                <div class="order-header" onclick="toggleOrder()">
+                    <div class="order-info">
+                        <span class="toggle-icon" id="toggle-">▶</span>
+                        <span class="order-title">Order #</span>
+                        
+                            <span class="status-badge status-draft">Draft</span>
+                        
+                            <span class="status-badge status-ordered">Ordered</span>
+                        
+                            <span class="status-badge status-delivery">In Delivery</span>
+                        
+                            <span class="status-badge status-received">Received</span>
+                        
+                            <span class="status-badge status-cancelled">Cancelled</span>
+                        
+                        <span class="item-count"> item</span>
+                        <span style="color: #666; font-size: 14px;"></span>
+                    </div>
+                    <div class="order-actions" onclick="event.stopPropagation();">
+                        
+                        <form method="post" action="#" style="display: inline;">
+                            
+                            <select name="status" onchange="this.form.submit()" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; background: white;">
+                                <option value="Draft" selected>Draft</option>
+                                <option value="Ordered">Ordered</option>
+                            </select>
+                        </form>
+                        
+                        <form method="post" action="#" style="display: inline;">
+                            
+                            <select name="status" onchange="this.form.submit()" style="padding: 8px 12px; border: 1px solid #ddd; border-radius: 4px; cursor: pointer; background: white;">
+                                <option value="Ordered" selected>Ordered</option>
+                                <option value="Received">Received</option>
+                            </select>
+                        </form>
+                        
+                        <span class="status-badge status-received" style="padding: 8px 15px;">Completed</span>
+                        
+                        <form method="post" action="#" style="display: inline;" onsubmit="return confirm('Delete this order?');">
+                            
+                            <button type="submit" class="btn-delete" style="padding: 8px 15px; border: none; border-radius: 4px; cursor: pointer;">Delete</button>
+                        </form>
+                    </div>
+                </div>
+                <div class="line-items" id="items-">
+                    
+                    <div class="line-item">
+                        <div>
+                            <span class="medicine-name"></span>
+                            <span class="quantity"> boxes</span>
+                        </div>
+                        <div style="font-size: 12px; color: #666;">
+                            Mfg: 
+                            | Exp: 
+                        </div>
+                    </div>
+                    
+                    <div style="color: #999; padding: 10px;">No items in this order</div>
+                    
+                </div>
+                
+                <div class="order-notes" id="notes-">
+                    <strong>Notes:</strong> 
+                </div>
+                
+            </div>
+            
+        
+            <div class="empty-state">
+                <div class="empty-icon">📦</div>
+                <h3 style="color: #666; margin-bottom: 10px;">No Purchase Orders Yet</h3>
+                <p>Click "+ New Purchase Order" to create your first order.</p>
+            </div>
+        
+    </div>
+</div>
+
+<script>
+function toggleOrder(poId) {
+    const items = document.getElementById('items-' + poId);
+    const notes = document.getElementById('notes-' + poId);
+    const toggle = document.getElementById('toggle-' + poId);
+    
+    items.classList.toggle('show');
+    if (notes) notes.classList.toggle('show');
+    toggle.classList.toggle('expanded');
+}
+
+function updateStatus(poId, currentStatus) {
+    const newStatus = prompt('Update order status:\n\nCurrent: ' + currentStatus + '\n\nEnter new status (Draft, Ordered, In Delivery, Received, Cancelled):', currentStatus);
+    if (newStatus && newStatus !== currentStatus) {
+        fetch(`/purchase-order/${poId}/update-status/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': getCookie('csrftoken')
+            },
+            body: JSON.stringify({status: newStatus})
+        })
+        .then(r => r.json())
+        .then(data => {
+            if (data.success) {
+                location.reload();
+            } else {
+                alert('Failed to update status');
+            }
+        });
+    }
+}
+
+function getCookie(name) {
+    let cookieValue = null;
+    if (document.cookie && document.cookie !== '') {
+        const cookies = document.cookie.split(';');
+        for (let i = 0; i < cookies.length; i++) {
+            const cookie = cookies[i].trim();
+            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+</script>
+<script>
+(function () {
+  if (window.__tgpDemoMode) return;
+  window.__tgpDemoMode = true;
+
+  document.querySelectorAll('form').forEach(function (form) {
+    var action = (form.getAttribute('action') || '').trim();
+    if (!action || action === '#' || action.toLowerCase().startsWith('javascript:')) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        alert('Demo mode: form submission is disabled.');
+      });
+    }
+  });
+
+  document.querySelectorAll('a[href="#"]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      alert('Demo mode: this action is not connected to backend logic.');
+    });
+  });
+})();
+</script>
+</body>
+</html>

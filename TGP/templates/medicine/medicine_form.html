@@ -1,0 +1,86 @@
+
+
+<div class="container mt-4">
+  <h2>Edit ProductAdd New Product</h2>
+
+  
+  <div style="background: #fff3e0; border-left: 4px solid #f57c00; padding: 15px; margin-bottom: 20px; border-radius: 4px;">
+    <strong>ℹ️ Price Management:</strong> To update prices, please use the dedicated 
+    <a href="#" style="color: #2196F3; font-weight: bold;">Update Price</a> 
+    button. This ensures proper price change tracking and maintains data integrity.
+    
+    <div style="margin-top: 10px; padding-top: 10px; border-top: 1px solid #ffcc80;">
+      <strong>Current Prices:</strong><br>
+      Base Price: <strong>₱</strong> | 
+      Selling Price: <strong>₱</strong>
+    </div>
+  </div>
+  
+
+  <form method="post" id="medicine-form">
+    
+
+    <p><label for="id_name">Name:</label> </p>
+    <p><label for="id_brand">Brand:</label> </p>
+    <p><label for="id_category">Category:</label> </p>
+    <p><label for="id_product_type">Product Type:</label> </p>
+    <p><label for="id_dosage_form">Dosage Form:</label> </p>
+    <p><label for="id_strength">Dosage Strength:</label> </p>
+
+    <hr>
+    <h4>Packaging Details</h4>
+
+    <p><label for="id_units_per_pack">Pieces per Pack:</label> </p>
+    <p><label for="id_packs_per_box">Packs per Box:</label> </p>
+
+    
+    <hr>
+    <h4>Pricing</h4>
+
+    <p><label for="id_base_price">Base Price (₱):</label> </p>
+    <p><label for="id_selling_price">Selling Price (₱):</label> </p>
+    
+
+    <p><label for="id_description">Description:</label> </p>
+
+    <button type="submit" class="btn btn-success">Save</button>
+    <a href="#" class="btn btn-secondary">Cancel</a>
+    
+    
+    <a href="#" class="btn" style="background: #2196F3; color: white;">💰 Update Price</a>
+    
+  </form>
+</div>
+
+<script>
+// Dynamic product type loading based on category selection
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryField = document.querySelector('#medicine-form select[name="category"]');
+    const productTypeField = document.querySelector('#medicine-form select[name="product_type"]');
+    
+    if (categoryField && productTypeField) {
+        categoryField.addEventListener('change', function() {
+            const categoryId = this.value;
+            
+            // Clear current product type options
+            productTypeField.innerHTML = '<option value="">---------</option>';
+            
+            if (categoryId) {
+                // Fetch product types for selected category
+                fetch(`/api/product-types/?category=${categoryId}`)
+                    .then(response => response.json())
+                    .then(data => {
+                        data.forEach(productType => {
+                            const option = document.createElement('option');
+                            option.value = productType.id;
+                            option.textContent = productType.name;
+                            productTypeField.appendChild(option);
+                        });
+                    })
+                    .catch(error => console.error('Error loading product types:', error));
+            }
+        });
+    }
+});
+</script>
+

@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../TGPfavicon.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TGP Pharmacy</title>
+    
+    <link rel="stylesheet" href="../../static/landingpage/navigationbarlanding.css">
+    <link rel="stylesheet" href="../../static/landingpage/contactstyles.css">
+</head>
+<body>
+<header>
+        <div class="logo">
+            <img src="../../static/landingpage/photo/logo.png" alt="TGP Logo" width="100">
+        </div>
+        <nav>
+            <ul>    
+                <li><a href="landingpage.html">HOME</a></li>
+                <li><a href="about.html">ABOUT US</a></li>
+                <li><a href="services.html">SERVICES</a></li>
+                <li><a href="contact.html" class="active">CONTACT US</a></li>
+            </ul>
+        </nav>
+        <a href="../dashboard/dashboard_demo.html" class="login-btn">LOGIN</a>
+    </header>
+
+    <!-- CONTACT US SECTION -->
+    <section class="contact-section">
+        <h1>Contact Us</h1>
+        <p class="subtitle">Need help or have questions about our system? We’re here to assist.</p>
+
+        <div class="contact-container">
+            <!-- Image Section -->
+            <div class="contact-image">
+                <div class="circle-bg"></div>
+                <img src="../../static/landingpage/photo/pharmacists.png" alt="TGP Pharmacists">
+            </div>
+
+            <!-- Contact Info Section -->
+            <div class="contact-info">
+                <p>📍 <strong>Head Office:</strong><br>
+                The Generics Pharmacy Corporate Office<br>
+                No. 7 United Street, Greenhills, Mandaluyong City, Philippines</p>
+
+                <p>📞 <strong>Telephone:</strong><br>
+                (02) 535-7333</p>
+
+                <p>📧 <strong>Email:</strong><br>
+                info@tgp.com.ph</p>
+
+                <p>🕒 <strong>Office Hours:</strong><br>
+                Monday to Friday — 8:00 AM to 5:00 PM</p>
+
+                <p><strong>Follow Us:</strong><br>
+                🌐 <a href="https://www.tgp.com.ph" target="_blank">www.tgp.com.ph</a><br>
+                📘 <a href="https://facebook.com/TheGenericsPharmacy" target="_blank">facebook.com/TheGenericsPharmacy</a></p>
+            </div>
+        </div>
+    </section>
+
+    <!-- FOOTER -->
+    <footer>
+        <div class="footer-logo">
+            <img src="../../static/landingpage/photo/logo.png" alt="TGP Logo" width="70">
+        </div>
+        <nav>
+            <ul>
+                <li><a href="landingpage.html">HOME</a></li>
+                <li><a href="about.html">ABOUT US</a></li>
+                <li><a href="services.html">SERVICES</a></li>
+                <li><a href="contact.html">CONTACT US</a></li>
+            </ul>
+        </nav>
+        <p>© 2025 The Generics Pharmacy. Kalusugan Para sa Lahat.</p>
+    </footer>
+<script>
+(function () {
+  if (window.__tgpDemoMode) return;
+  window.__tgpDemoMode = true;
+
+  document.querySelectorAll('form').forEach(function (form) {
+    var action = (form.getAttribute('action') || '').trim();
+    if (!action || action === '#' || action.toLowerCase().startsWith('javascript:')) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        alert('Demo mode: form submission is disabled.');
+      });
+    }
+  });
+
+  document.querySelectorAll('a[href="#"]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      alert('Demo mode: this action is not connected to backend logic.');
+    });
+  });
+})();
+</script>
+</body>
+</html>

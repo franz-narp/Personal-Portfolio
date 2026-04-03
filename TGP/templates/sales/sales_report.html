@@ -1,0 +1,371 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../TGPfavicon.png">
+    <meta charset="UTF-8">
+    <title>TGP Pharmacy</title>
+        <link rel="stylesheet" href="../../static/registration/sidebarstyles.css">
+    <link rel="stylesheet" href="../../static/registration/userliststyles.css">
+    <style>
+        .filter-section {
+            background: white;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        .filter-form {
+            display: flex;
+            gap: 15px;
+            align-items: flex-end;
+            flex-wrap: wrap;
+        }
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+            gap: 5px;
+        }
+        .filter-group label {
+            font-weight: 500;
+            font-size: 14px;
+            color: #555;
+        }
+        .filter-group input {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            min-width: 150px;
+        }
+        .filter-group select {
+            padding: 8px 12px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            font-size: 14px;
+            min-width: 200px;
+        }
+        .filter-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: auto;
+        }
+        .btn-filter {
+            padding: 8px 20px;
+            border: none;
+            background: #e53935;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+        }
+        .btn-filter:hover {
+            background: #c62828;
+        }
+        .btn-clear {
+            padding: 8px 20px;
+            border: none;
+            background: #999;
+            color: white;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 14px;
+            text-decoration: none;
+            display: inline-block;
+        }
+        .btn-clear:hover {
+            background: #777;
+        }
+        .right-align {
+            text-align: right;
+        }
+        .items-detail {
+            font-size: 13px;
+            color: #666;
+            line-height: 1.5;
+        }
+        .discount-badge {
+            background: #ff9800;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 3px;
+            font-size: 11px;
+            display: inline-block;
+            margin-top: 4px;
+        }
+        .clickable {
+            color: #2196F3;
+            text-decoration: none;
+            font-weight: 500;
+        }
+        .clickable:hover {
+            text-decoration: underline;
+        }
+        .totals-summary {
+            background: white;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            box-shadow: 0 0 5px rgba(0,0,0,0.1);
+        }
+        .totals-summary h3 {
+            margin: 0 0 15px 0;
+            color: #333;
+            border-bottom: 2px solid #4CAF50;
+            padding-bottom: 10px;
+        }
+        .totals-summary p {
+            margin: 10px 0;
+            font-size: 15px;
+            display: flex;
+            justify-content: space-between;
+        }
+        .totals-summary strong {
+            color: #555;
+        }
+        .net-sales {
+            font-size: 18px !important;
+            font-weight: bold;
+            color: #4CAF50;
+            border-top: 2px solid #ddd;
+            padding-top: 10px;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="sidebar" id="sidebar">
+    <div class="logo-container">
+        <img src="../../static/landingpage/photo/logo.png" alt="TGP Logo">
+    </div>
+    <ul class="menu">
+        <li><a href="../dashboard/dashboard_demo.html">Dashboard</a></li>
+        <li><a href="../registration/userlist.html">User Accounts</a></li>
+        <li><a href="../medicine/medicine_list.html">Product</a></li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-po')">Purchase Orders</a>
+            <ul id="dropdown-po" class="dropdown-menu">
+                <li><a href="../medicine/purchase_order_form.html">New Order</a></li>
+                <li><a href="../medicine/purchase_order_list.html">View Orders</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-stock')">Stock Analysis</a>
+            <ul id="dropdown-stock" class="dropdown-menu">
+                <li><a href="../transfer/transfer_form.html">Stock Transfer</a></li>
+                <li><a href="../medicine/batch_list.html">Stock Batches</a></li>
+                <li><a href="../medicine/actual_inventory.html">Inventory</a></li>
+                <li><a href="../medicine/expiration_monitor.html">Expiration</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-logs')">Logs</a>
+            <ul id="dropdown-logs" class="dropdown-menu">
+                <li><a href="../dashboard/activity_logs.html">Activity Logs</a></li>
+                <li><a href="../medicine/movement_list.html">Stock Movement</a></li>
+                <li><a href="../notifications/notification_list.html">Notifications</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-sales')">Sales</a>
+            <ul id="dropdown-sales" class="dropdown-menu">
+                <li><a href="../medicine/dispense_form.html">Dispense</a></li>
+                <li><a href="../sales/sales_report.html">Sales Report</a></li>
+                <li><a href="../medicine/price_history.html">Price History</a></li>
+                <li><a href="../sales/refund_list.html">Refunds</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-account')">Account</a>
+            <ul id="dropdown-account" class="dropdown-menu">
+                <li><a href="../registration/updateaccount.html">Update Account</a></li>
+                <li><a href="../registration/updatepassword.html">Update Password</a></li>
+            </ul>
+        </li>
+
+        <li><a href="../ordering/ordering_list.html">Orders</a></li>
+        <li><a href="../landingpage/landingpage.html">Logout</a></li>
+    </ul>
+</div>
+<script>
+function toggleDropdown(id) {
+    const dropdown = document.getElementById(id);
+    if (!dropdown) return;
+    const dropdownLi = dropdown.parentElement;
+    dropdown.classList.toggle('open');
+    dropdown.classList.toggle('show');
+    dropdownLi.classList.toggle('open');
+}
+
+(function initSidebarState() {
+    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+    const links = document.querySelectorAll('.sidebar .menu a[href]');
+
+    links.forEach(function (link) {
+        const href = (link.getAttribute('href') || '').trim();
+        if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+        const targetPage = href.split('/').pop().toLowerCase();
+        if (targetPage && targetPage === currentPage) {
+            const li = link.closest('li');
+            if (li) li.classList.add('active');
+
+            const menu = link.closest('.dropdown-menu');
+            if (menu) {
+                menu.classList.add('open');
+                menu.classList.add('show');
+                const parent = menu.closest('.dropdown');
+                if (parent) parent.classList.add('open');
+            }
+        }
+    });
+})();
+</script>
+
+    <div class="main-content">
+        <h2>Sales Report</h2>
+
+        <div class="filter-section">
+            <form method="GET" class="filter-form">
+                <div class="filter-group">
+                    <label>Start Date:</label>
+                    <input type="date" name="start_date" value="">
+                </div>
+                
+                <div class="filter-group">
+                    <label>End Date:</label>
+                    <input type="date" name="end_date" value="">
+                </div>
+                
+                <div class="filter-group">
+                    <label>Medicine:</label>
+                    <select name="medicine" id="medicine-filter">
+                        <option value="">-- All Medicines --</option>
+                        
+                            <option value="" selected>
+                                 ()
+                            </option>
+                        
+                    </select>
+                </div>
+                
+                <div class="filter-buttons">
+                    <button type="submit" class="btn-filter">Filter</button>
+                    <a href="#" class="btn-clear">Clear</a>
+                </div>
+            </form>
+        </div>
+
+        <div class="table-container">
+            <table>
+                <thead>
+                    <tr>
+                        <th style="width: 8%;">Sale ID</th>
+                        <th style="width: 12%;">Date & Time</th>
+                        <th style="width: 10%;">Pharmacist</th>
+                        <th>Items</th>
+                        <th style="width: 12%;">Customer Type</th>
+                        <th class="right-align" style="width: 10%;">Subtotal</th>
+                        <th class="right-align" style="width: 10%;">Discount</th>
+                        <th class="right-align" style="width: 10%;">Final Amount</th>
+                        <th style="width: 8%;">Action</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    
+                    <tr>
+                        <td><strong>#</strong></td>
+                        <td>
+                            
+                            <small style="display: block; color: #666;"></small>
+                        </td>
+                        <td></td>
+                        <td class="items-detail">
+                            
+                                 ()<br>
+                            
+                                <em style="color: #999;">No items</em>
+                            
+                        </td>
+                        <td>
+                            
+                            
+                                <span class="discount-badge">% off</span>
+                            
+                        </td>
+                        <td class="right-align">₱</td>
+                        <td class="right-align">
+                            
+                                -₱
+                            
+                                -
+                            
+                        </td>
+                        <td class="right-align"><strong>₱</strong></td>
+                        <td>
+                            <a href="#" class="clickable">View Invoice</a>
+                        </td>
+                    </tr>
+                    
+                    <tr>
+                        <td colspan="9" style="text-align: center; padding: 40px; color: #999;">No sales found for the selected period.</td>
+                    </tr>
+                    
+                </tbody>
+            </table>
+        </div>
+
+        <div class="totals-summary">
+            <h3>Summary</h3>
+            <p><strong>Total Number of Sales:</strong> <span></span></p>
+            <p><strong>Total Sales Amount (before discount):</strong> <span>₱</span></p>
+            <p><strong>Total Discounts Given:</strong> <span>₱</span></p>
+            <p class="net-sales"><strong>Net Sales (after discounts):</strong> <span>₱</span></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    function toggleSidebar() {
+        document.getElementById("sidebar").classList.toggle("collapsed");
+    }
+
+    function toggleDropdown(id) {
+        const dropdown = document.getElementById(id);
+        const dropdownLi = dropdown.parentElement;
+        
+        // Toggle the 'open' class on both the dropdown menu and the parent li
+        dropdown.classList.toggle('open');
+        dropdownLi.classList.toggle('open');
+    }
+</script>
+<script>
+(function () {
+  if (window.__tgpDemoMode) return;
+  window.__tgpDemoMode = true;
+
+  document.querySelectorAll('form').forEach(function (form) {
+    var action = (form.getAttribute('action') || '').trim();
+    if (!action || action === '#' || action.toLowerCase().startsWith('javascript:')) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        alert('Demo mode: form submission is disabled.');
+      });
+    }
+  });
+
+  document.querySelectorAll('a[href="#"]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      alert('Demo mode: this action is not connected to backend logic.');
+    });
+  });
+})();
+</script>
+</body>
+</html>

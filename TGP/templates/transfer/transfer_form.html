@@ -1,0 +1,429 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../TGPfavicon.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TGP Pharmacy</title>
+        <link rel="stylesheet" href="../../static/registration/sidebarstyles.css">
+    <link rel="stylesheet" href="../../static/medicine/dispensestyles.css">
+</head>
+<body>
+<div class="container">
+        <div class="sidebar" id="sidebar">
+    <div class="logo-container">
+        <img src="../../static/landingpage/photo/logo.png" alt="TGP Logo">
+    </div>
+    <ul class="menu">
+        <li><a href="../dashboard/dashboard_demo.html">Dashboard</a></li>
+        <li><a href="../registration/userlist.html">User Accounts</a></li>
+        <li><a href="../medicine/medicine_list.html">Product</a></li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-po')">Purchase Orders</a>
+            <ul id="dropdown-po" class="dropdown-menu">
+                <li><a href="../medicine/purchase_order_form.html">New Order</a></li>
+                <li><a href="../medicine/purchase_order_list.html">View Orders</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-stock')">Stock Analysis</a>
+            <ul id="dropdown-stock" class="dropdown-menu">
+                <li><a href="../transfer/transfer_form.html">Stock Transfer</a></li>
+                <li><a href="../medicine/batch_list.html">Stock Batches</a></li>
+                <li><a href="../medicine/actual_inventory.html">Inventory</a></li>
+                <li><a href="../medicine/expiration_monitor.html">Expiration</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-logs')">Logs</a>
+            <ul id="dropdown-logs" class="dropdown-menu">
+                <li><a href="../dashboard/activity_logs.html">Activity Logs</a></li>
+                <li><a href="../medicine/movement_list.html">Stock Movement</a></li>
+                <li><a href="../notifications/notification_list.html">Notifications</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-sales')">Sales</a>
+            <ul id="dropdown-sales" class="dropdown-menu">
+                <li><a href="../medicine/dispense_form.html">Dispense</a></li>
+                <li><a href="../sales/sales_report.html">Sales Report</a></li>
+                <li><a href="../medicine/price_history.html">Price History</a></li>
+                <li><a href="../sales/refund_list.html">Refunds</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-account')">Account</a>
+            <ul id="dropdown-account" class="dropdown-menu">
+                <li><a href="../registration/updateaccount.html">Update Account</a></li>
+                <li><a href="../registration/updatepassword.html">Update Password</a></li>
+            </ul>
+        </li>
+
+        <li><a href="../ordering/ordering_list.html">Orders</a></li>
+        <li><a href="../landingpage/landingpage.html">Logout</a></li>
+    </ul>
+</div>
+<script>
+function toggleDropdown(id) {
+    const dropdown = document.getElementById(id);
+    if (!dropdown) return;
+    const dropdownLi = dropdown.parentElement;
+    dropdown.classList.toggle('open');
+    dropdown.classList.toggle('show');
+    dropdownLi.classList.toggle('open');
+}
+
+(function initSidebarState() {
+    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+    const links = document.querySelectorAll('.sidebar .menu a[href]');
+
+    links.forEach(function (link) {
+        const href = (link.getAttribute('href') || '').trim();
+        if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+        const targetPage = href.split('/').pop().toLowerCase();
+        if (targetPage && targetPage === currentPage) {
+            const li = link.closest('li');
+            if (li) li.classList.add('active');
+
+            const menu = link.closest('.dropdown-menu');
+            if (menu) {
+                menu.classList.add('open');
+                menu.classList.add('show');
+                const parent = menu.closest('.dropdown');
+                if (parent) parent.classList.add('open');
+            }
+        }
+    });
+})();
+</script>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="page-header">
+                <h2>Stock Transfer (Stock-Out)</h2>
+                <p>Select one or more products to transfer out of the store. FIFO will be used to deduct from batches.</p>
+            </div>
+
+            
+                
+                    <div class="alert alert-">
+                        
+                    </div>
+                
+            
+
+            <form method="post" novalidate id="transfer-form">
+                
+                
+                <!-- Branch Selection -->
+                <div class="table-container" style="margin-bottom: 20px;">
+                    <div class="form-group" style="padding: 20px;">
+                        <label for="transfer_branch" style="display: block; margin-bottom: 10px; font-weight: 600;">Transfer to Branch:</label>
+                        <select name="transfer_branch" id="transfer_branch" required style="width: 100%; max-width: 400px; padding: 10px; border: 1px solid #ddd; border-radius: 4px;">
+                            <option value="">-- Select Branch --</option>
+                            <option value="Toril">Toril</option>
+                            <option value="Buhangin">Buhangin</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <!-- Transfer Items Table -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h5>Transfer Items</h5>
+                        <button type="button" class="btn-add" id="add-row">
+                            + Add Medicine
+                        </button>
+                    </div>
+                    
+                    
+                    <table>
+                        <thead style="color: #fff;">
+                            <tr>
+                                <th style="color: #fff;">Medicine</th>
+                                <th style="color: #fff;">Unit Type</th>
+                                <th style="color: #fff;">Quantity</th>
+                                <th style="width: 180px; color: #fff;">Available Stock</th>
+                                <th style="width: 80px; color: #fff;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="formset-body">
+                            
+                            <tr class="formset-row" data-form-index="">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="available-stock">-</td>
+                                <td>
+                                    <button type="button" class="btn-remove" onclick="removeRow(this)">Remove</button>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button type="submit" class="btn-submit">Transfer Selected Items</button>
+                    <a href="#" class="btn-cancel">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script>
+// Medicine data from server
+const medicinesData = null;
+const medicineMap = {};
+medicinesData.forEach(med => {
+    medicineMap[med.id] = med;
+});
+
+function toggleDropdown(id) {
+    const dropdown = document.getElementById(id);
+    const dropdownLi = dropdown.parentElement;
+    
+    // Toggle the 'open' class on both the dropdown menu and the parent li
+    dropdown.classList.toggle('open');
+    dropdownLi.classList.toggle('open');
+}
+
+// Update available stock display and validate quantity
+function updateStockInfo(row) {
+    const medicineSelect = row.querySelector('select[name*="medicine"]');
+    const unitSelect = row.querySelector('select[name*="unit_type"]');
+    const quantityInput = row.querySelector('input[name*="quantity"]');
+    const availableCell = row.querySelector('.available-stock');
+    
+    if (!medicineSelect || !unitSelect || !quantityInput || !availableCell) return;
+    
+    const medicineId = medicineSelect.value;
+    const unitType = unitSelect.value || 'box';
+    const qty = parseInt(quantityInput.value || 0);
+    
+    if (!medicineId) {
+        availableCell.textContent = '-';
+        availableCell.style.color = '#666';
+        quantityInput.removeAttribute('max');
+        return;
+    }
+    
+    const medicine = medicineMap[medicineId];
+    if (!medicine) {
+        availableCell.textContent = '-';
+        availableCell.style.color = '#666';
+        quantityInput.removeAttribute('max');
+        return;
+    }
+    
+    const availablePieces = medicine.available_pieces || 0;
+    const unitsPerPack = medicine.units_per_pack || 1;
+    const packsPerBox = medicine.packs_per_box || 1;
+    const piecesPerBox = unitsPerPack * packsPerBox;
+    
+    let maxQty = 0;
+    let stockText = '';
+    
+    // Calculate max quantity and display text based on unit type
+    if (unitType === 'box') {
+        maxQty = Math.floor(availablePieces / piecesPerBox);
+        stockText = `${maxQty} boxes`;
+        const availablePacks = Math.floor(availablePieces / unitsPerPack);
+        stockText += ` (${availablePieces} pcs, ${availablePacks} packs)`;
+    } else if (unitType === 'pack') {
+        maxQty = Math.floor(availablePieces / unitsPerPack);
+        stockText = `${maxQty} packs`;
+        const availableBoxes = Math.floor(availablePieces / piecesPerBox);
+        stockText += ` (${availablePieces} pcs, ${availableBoxes} boxes)`;
+    } else if (unitType === 'piece') {
+        maxQty = availablePieces;
+        stockText = `${availablePieces} pcs`;
+        const availablePacks = Math.floor(availablePieces / unitsPerPack);
+        const availableBoxes = Math.floor(availablePieces / piecesPerBox);
+        if (availablePacks > 0) stockText += ` (${availablePacks} packs`;
+        if (availableBoxes > 0) stockText += `, ${availableBoxes} boxes)`;
+        else if (availablePacks > 0) stockText += ')';
+    }
+    
+    // Set max attribute
+    quantityInput.setAttribute('max', maxQty);
+    
+    // Validate and limit input
+    if (qty > maxQty) {
+        quantityInput.value = maxQty;
+        availableCell.textContent = `⚠️ Max: ${maxQty} ${unitType}(s)`;
+        availableCell.style.color = '#dc3545';
+        
+        // Show alert once
+        if (!quantityInput.dataset.alertShown) {
+            alert(`Insufficient stock! Maximum available: ${maxQty} ${unitType}(s)`);
+            quantityInput.dataset.alertShown = 'true';
+            setTimeout(() => delete quantityInput.dataset.alertShown, 2000);
+        }
+    } else {
+        availableCell.textContent = stockText;
+        availableCell.style.color = '#28a745';
+    }
+}
+
+// Add event listeners to all existing rows
+document.addEventListener('DOMContentLoaded', function() {
+    const tbody = document.getElementById('formset-body');
+    const rows = tbody.querySelectorAll('.formset-row');
+    
+    // Remove all rows except the first one
+    rows.forEach((row, index) => {
+        if (index > 0) {
+            row.remove();
+        } else {
+            // Add listeners to first row
+            const medicineSelect = row.querySelector('select[name*="medicine"]');
+            const unitSelect = row.querySelector('select[name*="unit_type"]');
+            
+            if (medicineSelect) {
+                medicineSelect.addEventListener('change', () => updateStockInfo(row));
+            }
+            if (unitSelect) {
+                unitSelect.addEventListener('change', () => updateStockInfo(row));
+            }
+            
+            // Add quantity input listener
+            const quantityInput = row.querySelector('input[name*="quantity"]');
+            if (quantityInput) {
+                quantityInput.addEventListener('input', () => updateStockInfo(row));
+            }
+            
+            // Initial update
+            updateStockInfo(row);
+        }
+    });
+    
+    // Update form count to 1
+    formIndex = 1;
+    document.getElementById('id_form-TOTAL_FORMS').value = 1;
+});
+
+// Add new row functionality
+let formIndex = null;
+
+document.getElementById('add-row').addEventListener('click', function() {
+    const tbody = document.getElementById('formset-body');
+    const newRow = document.createElement('tr');
+    newRow.className = 'formset-row';
+    newRow.dataset.formIndex = formIndex;
+    
+    // Get the first row to clone select options
+    const firstRow = tbody.querySelector('.formset-row');
+    const firstMedicineSelect = firstRow?.querySelector('select[name*="medicine"]');
+    const firstUnitSelect = firstRow?.querySelector('select[name*="unit_type"]');
+    
+    let medicineOptions = '';
+    let unitOptions = '';
+    
+    if (firstMedicineSelect) {
+        Array.from(firstMedicineSelect.options).forEach(opt => {
+            medicineOptions += `<option value="${opt.value}">${opt.textContent}</option>`;
+        });
+    }
+    
+    if (firstUnitSelect) {
+        Array.from(firstUnitSelect.options).forEach(opt => {
+            unitOptions += `<option value="${opt.value}">${opt.textContent}</option>`;
+        });
+    }
+    
+    newRow.innerHTML = `
+        <td>
+            <select name="form-${formIndex}-medicine" id="id_form-${formIndex}-medicine" required>
+                ${medicineOptions}
+            </select>
+        </td>
+        <td>
+            <select name="form-${formIndex}-unit_type" id="id_form-${formIndex}-unit_type">
+                ${unitOptions}
+            </select>
+        </td>
+        <td>
+            <input type="number" name="form-${formIndex}-quantity" id="id_form-${formIndex}-quantity" 
+                   step="1" min="1" required>
+        </td>
+        <td class="available-stock">-</td>
+        <td>
+            <button type="button" class="btn-remove" onclick="removeRow(this)">Remove</button>
+        </td>
+    `;
+    
+    tbody.appendChild(newRow);
+    
+    // Add event listeners to the new row
+    const medicineSelect = newRow.querySelector('select[name*="medicine"]');
+    const unitSelect = newRow.querySelector('select[name*="unit_type"]');
+    const quantityInput = newRow.querySelector('input[name*="quantity"]');
+    
+    if (medicineSelect) {
+        medicineSelect.addEventListener('change', () => updateStockInfo(newRow));
+    }
+    if (unitSelect) {
+        unitSelect.addEventListener('change', () => updateStockInfo(newRow));
+    }
+    if (quantityInput) {
+        quantityInput.addEventListener('input', () => updateStockInfo(newRow));
+    }
+    
+    // Initial update
+    updateStockInfo(newRow);
+    
+    formIndex++;
+    
+    // Update management form
+    document.getElementById('id_form-TOTAL_FORMS').value = formIndex;
+});
+
+function removeRow(button) {
+    const tbody = document.getElementById('formset-body');
+    const rows = tbody.querySelectorAll('.formset-row');
+    
+    // Keep at least one row
+    if (rows.length > 1) {
+        button.closest('tr').remove();
+        
+        // Update form count
+        const currentTotal = parseInt(document.getElementById('id_form-TOTAL_FORMS').value);
+        document.getElementById('id_form-TOTAL_FORMS').value = currentTotal - 1;
+    } else {
+        alert('You must have at least one item to transfer.');
+    }
+}
+</script>
+<script>
+(function () {
+  if (window.__tgpDemoMode) return;
+  window.__tgpDemoMode = true;
+
+  document.querySelectorAll('form').forEach(function (form) {
+    var action = (form.getAttribute('action') || '').trim();
+    if (!action || action === '#' || action.toLowerCase().startsWith('javascript:')) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        alert('Demo mode: form submission is disabled.');
+      });
+    }
+  });
+
+  document.querySelectorAll('a[href="#"]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      alert('Demo mode: this action is not connected to backend logic.');
+    });
+  });
+})();
+</script>
+</body>
+</html>

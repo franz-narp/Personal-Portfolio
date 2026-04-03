@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="icon" type="image/png" href="../../TGPfavicon.png">
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TGP Pharmacy</title>
+        <link rel="stylesheet" href="../../static/registration/sidebarstyles.css">
+    <link rel="stylesheet" href="../../static/medicine/dispensestyles.css">
+</head>
+<body>
+<div class="container">
+        <!-- Sidebar -->
+        <div class="sidebar" id="sidebar">
+    <div class="logo-container">
+        <img src="../../static/landingpage/photo/logo.png" alt="TGP Logo">
+    </div>
+    <ul class="menu">
+        <li><a href="../dashboard/dashboard_demo.html">Dashboard</a></li>
+        <li><a href="../registration/userlist.html">User Accounts</a></li>
+        <li><a href="../medicine/medicine_list.html">Product</a></li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-po')">Purchase Orders</a>
+            <ul id="dropdown-po" class="dropdown-menu">
+                <li><a href="../medicine/purchase_order_form.html">New Order</a></li>
+                <li><a href="../medicine/purchase_order_list.html">View Orders</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-stock')">Stock Analysis</a>
+            <ul id="dropdown-stock" class="dropdown-menu">
+                <li><a href="../transfer/transfer_form.html">Stock Transfer</a></li>
+                <li><a href="../medicine/batch_list.html">Stock Batches</a></li>
+                <li><a href="../medicine/actual_inventory.html">Inventory</a></li>
+                <li><a href="../medicine/expiration_monitor.html">Expiration</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-logs')">Logs</a>
+            <ul id="dropdown-logs" class="dropdown-menu">
+                <li><a href="../dashboard/activity_logs.html">Activity Logs</a></li>
+                <li><a href="../medicine/movement_list.html">Stock Movement</a></li>
+                <li><a href="../notifications/notification_list.html">Notifications</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-sales')">Sales</a>
+            <ul id="dropdown-sales" class="dropdown-menu">
+                <li><a href="../medicine/dispense_form.html">Dispense</a></li>
+                <li><a href="../sales/sales_report.html">Sales Report</a></li>
+                <li><a href="../medicine/price_history.html">Price History</a></li>
+                <li><a href="../sales/refund_list.html">Refunds</a></li>
+            </ul>
+        </li>
+
+        <li class="dropdown">
+            <a href="javascript:void(0)" class="dropdown-toggle" onclick="toggleDropdown('dropdown-account')">Account</a>
+            <ul id="dropdown-account" class="dropdown-menu">
+                <li><a href="../registration/updateaccount.html">Update Account</a></li>
+                <li><a href="../registration/updatepassword.html">Update Password</a></li>
+            </ul>
+        </li>
+
+        <li><a href="../ordering/ordering_list.html">Orders</a></li>
+        <li><a href="../landingpage/landingpage.html">Logout</a></li>
+    </ul>
+</div>
+<script>
+function toggleDropdown(id) {
+    const dropdown = document.getElementById(id);
+    if (!dropdown) return;
+    const dropdownLi = dropdown.parentElement;
+    dropdown.classList.toggle('open');
+    dropdown.classList.toggle('show');
+    dropdownLi.classList.toggle('open');
+}
+
+(function initSidebarState() {
+    const currentPage = window.location.pathname.split('/').pop().toLowerCase();
+    const links = document.querySelectorAll('.sidebar .menu a[href]');
+
+    links.forEach(function (link) {
+        const href = (link.getAttribute('href') || '').trim();
+        if (!href || href === '#' || href.startsWith('javascript:')) return;
+
+        const targetPage = href.split('/').pop().toLowerCase();
+        if (targetPage && targetPage === currentPage) {
+            const li = link.closest('li');
+            if (li) li.classList.add('active');
+
+            const menu = link.closest('.dropdown-menu');
+            if (menu) {
+                menu.classList.add('open');
+                menu.classList.add('show');
+                const parent = menu.closest('.dropdown');
+                if (parent) parent.classList.add('open');
+            }
+        }
+    });
+})();
+</script>
+
+        <!-- Main Content -->
+        <div class="main-content">
+            <div class="page-header">
+                <h2>Dispense Medicine</h2>
+                <p>Add multiple medicines to create a sale transaction</p>
+            </div>
+
+            
+                
+                    <div class="alert alert-">
+                        
+                    </div>
+                
+            
+
+            <form method="post" novalidate id="dispense-form">
+                
+                
+                <!-- Line Items Table -->
+                <div class="table-container">
+                    <div class="table-header">
+                        <h5>Line Items</h5>
+                        <button type="button" class="btn-add" id="add-row">
+                            + Add Medicine
+                        </button>
+                    </div>
+                    
+                    
+                    <table>
+                        <thead style="color: #fff;">
+                            <tr>
+                                <th style="color: #fff;">Medicine</th>
+                                <th style="color: #fff;">Unit Type</th>
+                                <th style="color: #fff;">Quantity</th>
+                                <th style="color: #fff;">Available Stock</th>
+                                <th style="color: #fff;">Selling Price</th>
+                                <th style="width: 100px; color: #fff;">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="formset-body">
+                            
+                            <tr class="formset-row">
+                                <td></td>
+                                <td></td>
+                                <td></td>
+                                <td class="available-stock" style="font-size: 0.9em; color: #666;"></td>
+                                <td class="line-total">₱0.00</td>
+                                <td>
+                                    <button type="button" class="btn-remove" onclick="removeRow(this)">Remove</button>
+                                </td>
+                            </tr>
+                            
+                        </tbody>
+                    </table>
+                    
+                    
+                    <div class="alert alert-danger" style="margin-top: 15px;">
+                        <strong>Form Errors:</strong>
+                        <ul>
+                        
+                            
+                                <li>Row : </li>
+                            
+                        
+                        </ul>
+                    </div>
+                    
+                </div>
+
+                <!-- Payment Details -->
+                <div class="payment-card">
+                    <h5>Payment Details</h5>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="discount_type_fk">Discount Type</label>
+                            <select name="discount_type_fk" id="discount_type_fk">
+                                <option value="">No Discount</option>
+                                
+                                <option value="" data-rate="">
+                                     (%)
+                                </option>
+                                
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label for="payment_method">Payment Method</label>
+                            <select name="payment_method" id="payment_method" onchange="toggleReferenceNumber()">
+                                
+                                <option value="" selected></option>
+                                
+                            </select>
+                        </div>
+                        
+                        <div class="form-group" id="reference-number-group" style="display: none;">
+                            <label for="reference_number">Reference Number</label>
+                            <input type="text" name="reference_number" id="reference_number" placeholder="Enter reference number">
+                        </div>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label for="cash_received">Cash Received</label>
+                        <input type="number" step="0.01" name="cash_received" id="cash_received" required>
+                    </div>
+
+                    <!-- Payment Summary -->
+                    <div class="payment-summary" id="payment-summary">
+                        <h6>Payment Summary</h6>
+                        <div class="summary-row">
+                            <span>Subtotal:</span>
+                            <strong id="summary-subtotal">₱0.00</strong>
+                        </div>
+                        <div class="summary-row">
+                            <span>Discount (<span id="summary-discount-rate">0</span>%):</span>
+                            <strong id="summary-discount">₱0.00</strong>
+                        </div>
+                        <div class="summary-row">
+                            <span>VAT (12%):</span>
+                            <strong id="summary-vat">₱0.00</strong>
+                        </div>
+                        <div class="summary-row total">
+                            <span>Total:</span>
+                            <strong id="summary-total">₱0.00</strong>
+                        </div>
+                        <div class="summary-row">
+                            <span>Cash Received:</span>
+                            <strong id="summary-cash">₱0.00</strong>
+                        </div>
+                        <div class="summary-row change">
+                            <span>Change:</span>
+                            <strong id="summary-change">₱0.00</strong>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Action Buttons -->
+                <div class="action-buttons">
+                    <button type="submit" class="btn-submit">Complete Sale & Print Invoice</button>
+                    <a href="#" class="btn-cancel">Cancel</a>
+                </div>
+            </form>
+        </div>
+    </div>
+
+<script>
+// Medicine data from backend
+const medicinesData = JSON.parse('');
+const medicineMap = {};
+medicinesData.forEach(med => {
+    medicineMap[med.id] = med;
+});
+
+// Track form count for dynamic forms
+let formCount = null;
+
+// Add new row
+document.getElementById('add-row').addEventListener('click', function(e) {
+    e.preventDefault();
+    const tbody = document.getElementById('formset-body');
+    const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+    
+    const firstRow = tbody.querySelector('.formset-row');
+    const newRow = firstRow.cloneNode(true);
+    
+    // Update form indices
+    const formIdx = formCount;
+    newRow.innerHTML = newRow.innerHTML.replace(/form-0-/g, `form-${formIdx}-`);
+    newRow.innerHTML = newRow.innerHTML.replace(/id_form-0-/g, `id_form-${formIdx}-`);
+    
+    // Clear values
+    newRow.querySelectorAll('input').forEach(input => {
+        if (input.type !== 'hidden' && !input.name.includes('TOTAL_FORMS') && !input.name.includes('INITIAL_FORMS')) {
+            input.value = '';
+        }
+    });
+    newRow.querySelectorAll('select').forEach(select => {
+        select.selectedIndex = 0;
+    });
+    newRow.querySelector('.line-total').textContent = '₱0.00';
+    newRow.querySelector('.available-stock').textContent = '';
+    
+    tbody.appendChild(newRow);
+    formCount++;
+    totalForms.value = formCount;
+    
+    attachRowListeners(newRow);
+    recalculateTotals();
+});
+
+// Remove row function
+function removeRow(button) {
+    const tbody = document.getElementById('formset-body');
+    const rows = tbody.querySelectorAll('.formset-row');
+    
+    // Keep at least one row
+    if (rows.length > 1) {
+        button.closest('tr').remove();
+        
+        // Update form count
+        const totalForms = document.getElementById('id_form-TOTAL_FORMS');
+        formCount = rows.length - 1; // Subtract 1 because we just removed one
+        totalForms.value = formCount;
+        
+        recalculateTotals();
+    } else {
+        alert('You must have at least one medicine to dispense.');
+    }
+}
+
+// Attach listeners to existing and new rows
+function attachRowListeners(row) {
+    const medicineSelect = row.querySelector('select[name*="medicine"]');
+    const qtyInput = row.querySelector('input[name*="quantity"]');
+    const unitSelect = row.querySelector('select[name*="unit_type"]');
+    
+    if (medicineSelect) medicineSelect.addEventListener('change', () => updateRowTotal(row));
+    if (qtyInput) qtyInput.addEventListener('input', () => updateRowTotal(row));
+    if (unitSelect) unitSelect.addEventListener('change', () => updateRowTotal(row));
+}
+
+// Update single row total
+function updateRowTotal(row) {
+    const medicineSelect = row.querySelector('select[name*="medicine"]');
+    const qtyInput = row.querySelector('input[name*="quantity"]');
+    const unitSelect = row.querySelector('select[name*="unit_type"]');
+    const stockDisplay = row.querySelector('.available-stock');
+    
+    console.log('updateRowTotal called', {
+        hasMedicine: !!medicineSelect,
+        hasQty: !!qtyInput,
+        hasUnit: !!unitSelect
+    });
+    
+    if (!medicineSelect || !qtyInput || !unitSelect) {
+        console.log('Missing elements in row');
+        return;
+    }
+    
+    const medicineId = medicineSelect.value;
+    const qty = parseFloat(qtyInput.value || 0);
+    const unitType = unitSelect.value || 'piece';
+    
+    console.log('Row values:', { medicineId, qty, unitType });
+    
+    if (!medicineId) {
+        row.querySelector('.line-total').textContent = '₱0.00';
+        if (stockDisplay) stockDisplay.textContent = '';
+        recalculateTotals();
+        return;
+    }
+    
+    const medicine = medicineMap[medicineId];
+    if (!medicine) {
+        console.log('Medicine not found:', medicineId);
+        row.querySelector('.line-total').textContent = '₱0.00';
+        if (stockDisplay) stockDisplay.textContent = '';
+        recalculateTotals();
+        return;
+    }
+    
+    // Display available stock based on selected unit type
+    if (stockDisplay) {
+        const availablePieces = medicine.available_pieces || 0;
+        const unitsPerPack = medicine.units_per_pack || 1;
+        const packsPerBox = medicine.packs_per_box || 1;
+        const piecesPerBox = unitsPerPack * packsPerBox;
+        
+        let stockText = '';
+        if (unitType === 'piece') {
+            stockText = `${availablePieces} pcs`;
+            // Show equivalent in packs and boxes
+            const availablePacks = Math.floor(availablePieces / unitsPerPack);
+            const availableBoxes = Math.floor(availablePieces / piecesPerBox);
+            if (availablePacks > 0) stockText += ` (${availablePacks} packs`;
+            if (availableBoxes > 0) stockText += `, ${availableBoxes} boxes)`;
+            else if (availablePacks > 0) stockText += ')';
+        } else if (unitType === 'pack') {
+            const availablePacks = Math.floor(availablePieces / unitsPerPack);
+            stockText = `${availablePacks} packs`;
+            // Show equivalent in pieces and boxes
+            const availableBoxes = Math.floor(availablePieces / piecesPerBox);
+            stockText += ` (${availablePieces} pcs`;
+            if (availableBoxes > 0) stockText += `, ${availableBoxes} boxes)`;
+            else stockText += ')';
+        } else if (unitType === 'box') {
+            const availableBoxes = Math.floor(availablePieces / piecesPerBox);
+            stockText = `${availableBoxes} boxes`;
+            // Show equivalent in pieces and packs
+            const availablePacks = Math.floor(availablePieces / unitsPerPack);
+            stockText += ` (${availablePieces} pcs, ${availablePacks} packs)`;
+        }
+        stockDisplay.textContent = stockText;
+        stockDisplay.style.color = '#28a745';
+    }
+    
+    // Validate quantity against available stock
+    const perPiecePrice = parseFloat(medicine.selling_price || 0);
+    let pieces = qty;
+    if (unitType === 'pack') {
+        pieces = qty * (medicine.units_per_pack || 1);
+    } else if (unitType === 'box') {
+        pieces = qty * (medicine.packs_per_box || 1) * (medicine.units_per_pack || 1);
+    }
+    
+    const availablePieces = medicine.available_pieces || 0;
+    
+    // Check if quantity exceeds available stock
+    if (pieces > availablePieces) {
+        // Set input to max available
+        let maxQty = qty;
+        if (unitType === 'piece') {
+            maxQty = availablePieces;
+        } else if (unitType === 'pack') {
+            maxQty = Math.floor(availablePieces / (medicine.units_per_pack || 1));
+        } else if (unitType === 'box') {
+            maxQty = Math.floor(availablePieces / ((medicine.packs_per_box || 1) * (medicine.units_per_pack || 1)));
+        }
+        
+        qtyInput.value = maxQty;
+        pieces = Math.min(pieces, availablePieces);
+        
+        // Show error message
+        if (stockDisplay) {
+            stockDisplay.textContent = `⚠️ Max available: ${maxQty} ${unitType}(s)`;
+            stockDisplay.style.color = '#dc3545';
+        }
+        
+        // Show alert once
+        if (!qtyInput.dataset.alertShown) {
+            alert(`Insufficient stock! Maximum available: ${maxQty} ${unitType}(s)`);
+            qtyInput.dataset.alertShown = 'true';
+            setTimeout(() => delete qtyInput.dataset.alertShown, 2000);
+        }
+    }
+    
+    const lineTotal = pieces * perPiecePrice;
+    
+    console.log('Calculated:', { perPiecePrice, pieces, lineTotal });
+    
+    row.querySelector('.line-total').textContent = `₱${lineTotal.toFixed(2)}`;
+    
+    recalculateTotals();
+}
+
+// Recalculate totals with real-time updates including VAT
+function recalculateTotals() {
+    let subtotal = 0;
+    
+    document.querySelectorAll('.formset-row').forEach(row => {
+        const lineTotal = row.querySelector('.line-total').textContent;
+        const amount = parseFloat(lineTotal.replace(/[₱,]/g, '')) || 0;
+        subtotal += amount;
+    });
+    
+    const discountSelect = document.getElementById('discount_type_fk');
+    const discountRate = parseFloat(
+        discountSelect.options[discountSelect.selectedIndex]?.dataset?.rate || 0
+    );
+    
+    const discountAmount = subtotal * (discountRate / 100);
+    const subtotalAfterDiscount = subtotal - discountAmount;
+    
+    // Calculate 12% VAT
+    const vat = subtotalAfterDiscount * 0.12;
+    const total = subtotalAfterDiscount + vat;
+    
+    const cashInput = document.getElementById('cash_received');
+    const cash = parseFloat(cashInput?.value || 0);
+    const change = Math.max(0, cash - total);
+    
+    document.getElementById('summary-subtotal').textContent = `₱${subtotal.toFixed(2)}`;
+    document.getElementById('summary-discount-rate').textContent = discountRate.toFixed(0);
+    document.getElementById('summary-discount').textContent = `₱${discountAmount.toFixed(2)}`;
+    document.getElementById('summary-vat').textContent = `₱${vat.toFixed(2)}`;
+    document.getElementById('summary-total').textContent = `₱${total.toFixed(2)}`;
+    document.getElementById('summary-cash').textContent = `₱${cash.toFixed(2)}`;
+    document.getElementById('summary-change').textContent = `₱${change.toFixed(2)}`;
+}
+
+// Toggle reference number field based on payment method
+function toggleReferenceNumber() {
+    const paymentSelect = document.getElementById('payment_method');
+    const referenceGroup = document.getElementById('reference-number-group');
+    const selectedText = paymentSelect.options[paymentSelect.selectedIndex].text.toLowerCase();
+    
+    // Show reference number for digital payment methods
+    if (selectedText.includes('gcash') || selectedText.includes('paymaya') || 
+        selectedText.includes('credit card') || selectedText.includes('bank transfer')) {
+        referenceGroup.style.display = 'block';
+        document.getElementById('reference_number').required = true;
+    } else {
+        referenceGroup.style.display = 'none';
+        document.getElementById('reference_number').required = false;
+        document.getElementById('reference_number').value = '';
+    }
+}
+
+// Initialize
+console.log('Initializing dispense form...');
+console.log('Medicine data loaded:', medicinesData.length, 'medicines');
+
+document.querySelectorAll('.formset-row').forEach(row => {
+    attachRowListeners(row);
+    // Set default unit type to pack if empty
+    const unitSelect = row.querySelector('select[name*="unit_type"]');
+    if (unitSelect && !unitSelect.value) {
+        unitSelect.value = 'pack';
+    }
+    updateRowTotal(row);
+});
+
+const discountEl = document.getElementById('discount_type_fk');
+const cashEl = document.getElementById('cash_received');
+
+if (discountEl) {
+    discountEl.addEventListener('change', function() {
+        console.log('Discount changed');
+        recalculateTotals();
+    });
+}
+
+if (cashEl) {
+    cashEl.addEventListener('input', function() {
+        console.log('Cash changed:', this.value);
+        recalculateTotals();
+    });
+    cashEl.addEventListener('keyup', recalculateTotals);
+}
+
+recalculateTotals();
+console.log('Initialization complete');
+</script>
+<script>
+(function () {
+  if (window.__tgpDemoMode) return;
+  window.__tgpDemoMode = true;
+
+  document.querySelectorAll('form').forEach(function (form) {
+    var action = (form.getAttribute('action') || '').trim();
+    if (!action || action === '#' || action.toLowerCase().startsWith('javascript:')) {
+      form.addEventListener('submit', function (event) {
+        event.preventDefault();
+        alert('Demo mode: form submission is disabled.');
+      });
+    }
+  });
+
+  document.querySelectorAll('a[href="#"]').forEach(function (link) {
+    link.addEventListener('click', function (event) {
+      event.preventDefault();
+      alert('Demo mode: this action is not connected to backend logic.');
+    });
+  });
+})();
+</script>
+</body>
+</html>
