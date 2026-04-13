@@ -1,0 +1,188 @@
+.certificates-section {
+    width: min(100%, 1240px);
+    margin: 0 auto;
+    padding: 34px 18px 70px;
+    text-align: center;
+}
+
+.certificates-section h2 {
+    font-size: clamp(50px, 5.4vw, 67px);
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 14px;
+}
+
+.certificates-lead {
+    color: var(--text-soft);
+    font-size: clamp(14px, 1.12vw, 20px);
+    margin-bottom: 28px;
+}
+
+.certificates-carousel {
+    position: relative;
+    width: min(100%, 920px);
+    margin: 0 auto;
+    overflow: hidden;
+    border-radius: 18px;
+    border: 1px solid rgba(255, 255, 255, 0.16);
+    background: linear-gradient(145deg, rgba(7, 19, 46, 0.78), rgba(2, 8, 23, 0.72));
+    box-shadow: 0 24px 48px rgba(0, 0, 0, 0.35);
+}
+
+.certificates-track {
+    display: flex;
+    width: 100%;
+    transition: transform 0.55s ease;
+}
+
+.certificate-slide {
+    min-width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+}
+
+.certificate-slide img {
+    width: 100%;
+    height: clamp(220px, 35vw, 500px);
+    object-fit: contain;
+    background: rgba(4, 10, 25, 0.8);
+    padding: clamp(10px, 1.2vw, 14px);
+}
+
+.certificate-slide-footer {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding: 16px clamp(12px, 2vw, 24px) 18px;
+    text-align: left;
+}
+
+.certificate-slide-footer h3 {
+    font-size: clamp(16px, 1.6vw, 24px);
+    font-weight: 500;
+}
+
+.certificate-button {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    min-height: 40px;
+    padding: 0 14px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: rgba(9, 16, 38, 0.86);
+    color: var(--text-primary);
+    text-decoration: none;
+    white-space: nowrap;
+    transition: transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
+}
+
+.certificate-button:hover,
+.certificate-button:focus-visible {
+    transform: translateY(-2px);
+    background: rgba(16, 33, 73, 0.95);
+    border-color: rgba(255, 255, 255, 0.32);
+}
+
+.certificates-controls {
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: 14px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 14px;
+}
+
+.carousel-nav-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    border: 1px solid rgba(255, 255, 255, 0.24);
+    background: rgba(6, 14, 34, 0.86);
+    color: var(--text-primary);
+    font-size: 18px;
+    line-height: 1;
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease, border-color 0.2s ease;
+}
+
+.carousel-nav-btn:hover,
+.carousel-nav-btn:focus-visible {
+    transform: translateY(-2px);
+    background: rgba(14, 29, 63, 0.96);
+    border-color: rgba(255, 255, 255, 0.4);
+}
+
+.carousel-dots {
+    display: flex;
+    gap: 8px;
+    padding: 0 6px;
+}
+
+.carousel-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 999px;
+    border: 1px solid rgba(255, 255, 255, 0.45);
+    background: rgba(255, 255, 255, 0.14);
+    cursor: pointer;
+    transition: transform 0.2s ease, background 0.2s ease;
+}
+
+.carousel-dot.is-active,
+.carousel-dot[aria-selected="true"] {
+    background: rgba(255, 255, 255, 0.95);
+    transform: scale(1.06);
+}
+
+@media (max-width: 860px) {
+    .certificates-section {
+        padding-top: 28px;
+    }
+
+    .certificate-slide-footer {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .certificates-controls {
+        gap: 10px;
+    }
+}
+
+@media (max-width: 700px) {
+    .certificates-section {
+        padding: 24px 13px 52px;
+    }
+
+    .certificates-lead {
+        margin-bottom: 18px;
+        font-size: 12px;
+    }
+
+    .certificates-carousel {
+        border-radius: 14px;
+    }
+
+    .carousel-nav-btn {
+        width: 34px;
+        height: 34px;
+        font-size: 16px;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .certificates-track {
+        transition: none;
+    }
+
+    .certificate-button,
+    .carousel-nav-btn,
+    .carousel-dot {
+        transition: none;
+    }
+}
